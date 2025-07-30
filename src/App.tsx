@@ -1,5 +1,6 @@
 import Map from "./components/Map";
 import { TombacApp } from "tombac";
+import SignInPage from "./pages/SignInPage";
 
 function App() {
   return (
@@ -8,7 +9,7 @@ function App() {
         defineCssVariables
         theme={{ baseUnit: "px", settings: { modalZIndex: 20 } }}
       >
-        <Map />
+        <SignInPage />
       </TombacApp>
     </>
   );
