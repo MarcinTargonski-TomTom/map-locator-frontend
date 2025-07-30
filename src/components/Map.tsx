@@ -5,6 +5,7 @@ import {
   type MapModel,
   type MapStyleSettingsState,
 } from "legoland-shared";
+import styled from "styled-components";
 
 function Map() {
   const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
@@ -23,7 +24,7 @@ function Map() {
 
   return (
     <>
-      <div style={{ height: "600px", width: "900px" }}>
+      <MapDiv>
         <GlMap
           mapStyleSettings={mapStyleSettings}
           onMapStyleSettingsChange={(styles) =>
@@ -35,7 +36,7 @@ function Map() {
           hideNavigationControls={false}
           controlLocation="top-right"
           mapControlsProps={{
-            shouldCloseOnInteractOutside: (_) => {
+            shouldCloseOnInteractOutside: () => {
               return true;
             },
             mapLayersMenuContent: (
@@ -60,9 +61,17 @@ function Map() {
             ],
           }}
         ></GlMap>
-      </div>
+      </MapDiv>
     </>
   );
 }
 
 export default Map;
+
+const MapDiv = styled.div`
+  height: 90vh;
+  width: 95vw;
+  margin: 0 auto;
+  position: relative;
+  z-index: 0;
+`;
