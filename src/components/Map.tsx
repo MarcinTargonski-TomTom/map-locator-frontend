@@ -7,6 +7,8 @@ import {
 } from "legoland-shared";
 
 function Map() {
+  const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
+
   const [mapModel, setMapModel] = useState<MapModel>("Genesis");
   const [mapStyleSettings, setMapStyleSettings] =
     useState<MapStyleSettingsState>({
@@ -28,12 +30,12 @@ function Map() {
             setMapStyleSettings((prev) => ({ ...prev, ...styles }))
           }
           mapModel={mapModel}
-          apiKey="1ncwaIygtJ0KrjH5ssohlEKUGFf7G5Dv"
+          apiKey={apiKey}
           createMapOptions={{ center: [0, 0], zoom: 1 }}
           hideNavigationControls={false}
           controlLocation="top-right"
           mapControlsProps={{
-            shouldCloseOnInteractOutside: (el) => {
+            shouldCloseOnInteractOutside: (_) => {
               return true;
             },
             mapLayersMenuContent: (
