@@ -1,49 +1,170 @@
 import React, { useState } from "react";
-import { Button, Input, FormGroup, Label, VGrid } from "tombac";
-import "./SignInPage.css";
+import {
+  Button,
+  Input,
+  FormGroup,
+  Label,
+  VGrid,
+  tombac,
+  Heading,
+} from "tombac";
+import z from "zod";
+import styled from "styled-components";
+
+const schema = z.object({
+  login: z.string().min(1, { message: "Login is required" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long" }),
+});
 
 const SignInPage: React.FC = () => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<{ login?: string; password?: string }>(
+    {}
+  );
+  const [formValid, setFormValid] = useState(false);
+
+  const validateForm = (loginValue: string, passwordValue: string) => {
+    const result = schema.safeParse({
+      login: loginValue,
+      password: passwordValue,
+    });
+    setFormValid(result.success);
+  };
+
+  const validateLogin = () => {
+    const result = schema.shape.login.safeParse(login);
+    if (!result.success) {
+      setErrors((prev) => ({ ...prev, login: result.error.issues[0].message }));
+    } else {
+      setErrors((prev) => ({ ...prev, login: undefined }));
+    }
+    validateForm(login, password);
+  };
+
+  const validatePassword = () => {
+    const result = schema.shape.password.safeParse(password);
+    if (!result.success) {
+      setErrors((prev) => ({
+        ...prev,
+        password: result.error.issues[0].message,
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, password: undefined }));
+    }
+    validateForm(login, password);
+  };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
     console.log("Login:", login);
     console.log("Password:", password);
+    100;
   };
 
   return (
-    <div className="form-container">
-      <h2>Login</h2>
+    <Container>
+      <Title level={1}>Sign in</Title>
       <form onSubmit={handleSubmit}>
         <VGrid>
-          <FormGroup>
-            <Label htmlFor="login">Login</Label>
-            <Input
+          <FormGroupStyled>
+            <LabelStyled htmlFor="login">Login:</LabelStyled>
+            <InputStyled
               type="text"
               id="login"
-              placeholder="Login"
+              placeholder="Enter your login"
               value={login}
               onChange={(e) => setLogin(e.target.value)}
+              onBlur={validateLogin}
+              invalid={!!errors.login}
             />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="password">Password</Label>
-            <Input
+          </FormGroupStyled>
+          <ErrorContainer>
+            {errors.login && <ErrorText>{errors.login}</ErrorText>}
+          </ErrorContainer>
+          <FormGroupStyled>
+            <LabelStyled htmlFor="password">Password:</LabelStyled>
+            <InputStyled
               type="password"
               id="password"
-              placeholder="Password"
+              placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onBlur={validatePassword}
+              invalid={!!errors.password}
             />
-          </FormGroup>
+          </FormGroupStyled>
+          <ErrorContainer>
+            {errors.password && <ErrorText>{errors.password}</ErrorText>}
+          </ErrorContainer>
         </VGrid>
-        <Button type="submit" className="Button">
-          Sign in
-        </Button>
+        <ButtonContainer>
+          <StyledButton type="submit" disabled={!formValid}>
+            Sign in
+          </StyledButton>
+        </ButtonContainer>
       </form>
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  width: ${tombac.unit(600)};
+  margin: auto;
+  margin-top: ${tombac.space(8)};
+  padding: ${tombac.parse("2sp 4sp")};
+  border-radius: ${tombac.unit(4)};
+  box-shadow: 0 ${tombac.unit(2)} ${tombac.unit(4)} rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+`;
+
+const Title = styled(Heading)`
+  margin-bottom: ${tombac.space(5)};
+`;
+
+const FormGroupStyled = styled(FormGroup)`
+  display: flex;
+  flex-direction: column;
+`;
+
+const LabelStyled = styled(Label)`
+  width: ${tombac.unit(100)};
+  display: flex;
+  align-items: center;
+`;
+
+const InputStyled = styled(Input)`
+  width: ${tombac.unit(230)};
+`;
+
+const ErrorContainer = styled.div`
+  height: 20px;
+`;
+
+const ErrorText = styled.div`
+  font-size: ${tombac.unit(10)};
+  color: ${tombac.color("danger", 500)};
+  margin-left: ${tombac.space(14)};
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: ${tombac.space(4)};
+`;
+
+const StyledButton = styled(Button)`
+  width: 50%;
+  margin-top: ${tombac.space(2)};
+  margin-left: auto;
+  margin-right: auto;
+`;
 
 export default SignInPage;
