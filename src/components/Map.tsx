@@ -5,6 +5,7 @@ import {
   type MapModel,
   type MapStyleSettingsState,
 } from "legoland-shared";
+import "mapbox-gl/dist/mapbox-gl.css";
 import "tombac-icons/react/style.css";
 import styled from "styled-components";
 import { MARKER_COLORS } from "../lib/markerColors";
@@ -16,26 +17,6 @@ import PointDetailsModal from "./MapPointDetailsModal";
 import AddPointFormModal from "./AddPointFormModal";
 import MapClickHandler from "./MapClickHandler";
 import MatchLocationButton from "./MatchLocationButton";
-// Import utilities do testowania
-import "../utils/testAuth";
-
-// TYMCZASOWY KOD DO TESTOWANIA - DO USUNIĘCIA PÓŹNIEJ
-const generateTestToken = () => {
-  const testToken = `test-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  localStorage.setItem('authToken', testToken);
-  console.log('🔑 Wygenerowano i zapisano testowy token:', testToken);
-  console.log('📍 Token zapisany pod kluczem: "authToken"');
-  console.log('🧪 Możesz go podmienić w dev tools -> Application -> Local Storage');
-  return testToken;
-};
-
-// Wywołanie przy pierwszym załadowaniu
-if (!localStorage.getItem('authToken')) {
-  generateTestToken();
-} else {
-  console.log('🔑 Istniejący token:', localStorage.getItem('authToken'));
-}
-// KONIEC TYMCZASOWEGO KODU
 
 const TRAVEL_MODE_OPTIONS = [
   { value: "CAR" as TravelMode, label: "Samochód" },
