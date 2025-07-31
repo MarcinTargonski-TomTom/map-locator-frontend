@@ -23,6 +23,10 @@ const TRAVEL_MODE_OPTIONS = [
   { value: "PEDESTRIAN" as TravelMode, label: "Pieszy" },
   { value: "BUS" as TravelMode, label: "Autobus" },
 ];
+import MyRegionDisplay from "./RegionDisplay";
+import sampleApiResponse from "../../sampleApiResponse.json";
+import type { ApiResponse } from "../types/api";
+import { Button } from "tombac";
 
 function Map() {
   const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
@@ -30,6 +34,8 @@ function Map() {
   const [pointsOfInterest, setPointsOfInterest] = useState<PointOfInterest[]>(
     []
   );
+  const [regions, setRegions] = useState<ApiResponse[] | null>(null);
+  const [responseIndex, setResponseIndex] = useState<number>(0);
   const [showPointForm, setShowPointForm] = useState<{
     isVisible: boolean;
     longitude: number;
@@ -118,6 +124,7 @@ function Map() {
   };
 
   const clearAllPoints = () => {
+    setRegions(null);
     setPointsOfInterest([]);
     setShowPointForm(null);
   };
@@ -205,10 +212,40 @@ function Map() {
             onShowPointDetails={showPointDetailsModal}
             markerColors={MARKER_COLORS}
           />
+
+          {regions != null && (
+            <MyRegionDisplay apiResponse={regions[responseIndex]} />
+          )}
         </GlMap>
 
+        {regions && regions.length > 0 && (
+          <>
+            <Button
+              onClick={() => {
+                if (responseIndex < regions.length - 1) {
+                  setResponseIndex((prev) => prev + 1);
+                }
+              }}
+            >
+              Next Region
+            </Button>
+            <Button
+              onClick={() => {
+                if (responseIndex > 0) {
+                  setResponseIndex((prev) => prev - 1);
+                }
+              }}
+            >
+              Previous Region
+            </Button>
+          </>
+        )}
+
         {/* Przycisk dopasowywania lokalizacji */}
-        <MatchLocationButton pointsOfInterest={pointsOfInterest} />
+        <MatchLocationButton
+          pointsOfInterest={pointsOfInterest}
+          setRegions={setRegions}
+        />
 
         {showPointForm && (
           <AddPointFormModal
@@ -234,7 +271,6 @@ function Map() {
     </>
   );
 }
-
 export default Map;
 
 const MapDiv = styled.div`

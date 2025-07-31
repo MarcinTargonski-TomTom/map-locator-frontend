@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { PointOfInterest, BudgetType, TravelMode } from "../types/point";
+import type { ApiResponse } from "../types/api";
 
 interface LocationMatchRequest {
   center?: {
@@ -9,7 +10,7 @@ interface LocationMatchRequest {
   value: number;
   budgetType: string;
   travelMode: string;
-  name?: string;
+  name: string;
 }
 
 interface LocationMatchResponse {
@@ -19,8 +20,9 @@ interface LocationMatchResponse {
 interface UseLocationMatcherResult {
   isLoading: boolean;
   error: string | null;
-  data: LocationMatchResponse | null;
-  matchLocations: (pointsOfInterest: PointOfInterest[]) => Promise<void>;
+  matchLocations: (
+    pointsOfInterest: PointOfInterest[]
+  ) => Promise<ApiResponse[] | void>;
 }
 
 const mapBudgetType = (budgetType: BudgetType): string => {
@@ -40,7 +42,6 @@ const mapTravelMode = (travelMode: TravelMode): string => {
 export const useLocationMatcher = (): UseLocationMatcherResult => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<LocationMatchResponse | null>(null);
 
   const getAuthToken = (): string | null => {
     return (
@@ -54,7 +55,7 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
 
   const matchLocations = async (
     pointsOfInterest: PointOfInterest[]
-  ): Promise<void> => {
+  ): Promise<ApiResponse[] | void> => {
     setIsLoading(true);
     setError(null);
 
@@ -67,6 +68,7 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
       const requestData: LocationMatchRequest[] = pointsOfInterest.map(
         (poi) => {
           const baseRequest: LocationMatchRequest = {
+            name: poi.name,
             value: poi.value,
             budgetType: mapBudgetType(poi.budgetType),
             travelMode: mapTravelMode(poi.travelMode),
@@ -77,8 +79,6 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
               latitude: poi.point.latitude,
               longitude: poi.point.longitude,
             };
-          } else {
-            baseRequest.name = poi.name;
           }
 
           return baseRequest;
@@ -112,7 +112,7 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
       }
 
       const result = await response.json();
-      setData(result);
+      return result as ApiResponse[];
       console.log("Odpowiedź z API:", result);
     } catch (err) {
       const errorMessage =
@@ -127,7 +127,6 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
   return {
     isLoading,
     error,
-    data,
     matchLocations,
   };
 };
