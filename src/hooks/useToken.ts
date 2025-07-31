@@ -1,5 +1,5 @@
+import type { Tokens } from "../types/signIn";
 import { useLocalStorage } from "./useLocalStorage";
-import type { Tokens } from "./useSignIn";
 
 const TOKEN_KEY = "auth_token";
 
