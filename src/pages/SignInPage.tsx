@@ -7,9 +7,13 @@ import {
   VGrid,
   tombac,
   Heading,
+  useToasts,
 } from "tombac";
 import z from "zod";
 import styled from "styled-components";
+import { useSignIn, type Tokens } from "../hooks/useSignIn";
+import { useNavigate } from "react-router-dom";
+import { useToken } from "../hooks/useToken";
 
 const schema = z.object({
   login: z.string().min(1, { message: "Login is required" }),
@@ -25,6 +29,10 @@ const SignInPage: React.FC = () => {
     {}
   );
   const [formValid, setFormValid] = useState(false);
+  const { loading, signIn } = useSignIn();
+  const { addToast } = useToasts();
+  const navigate = useNavigate();
+  const [, setTokens] = useToken();
 
   const validateForm = (loginValue: string, passwordValue: string) => {
     const result = schema.safeParse({
@@ -57,12 +65,16 @@ const SignInPage: React.FC = () => {
     validateForm(login, password);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    console.log("Login:", login);
-    console.log("Password:", password);
-    100;
+    try {
+      const tokens: Tokens = await signIn(login, password);
+      addToast("Sign in successful!", "success");
+      setTokens(tokens);
+      navigate("/map");
+    } catch (err: any) {
+      addToast(err.message || "Sign in failed", "danger");
+    }
   };
 
   return (
@@ -103,7 +115,7 @@ const SignInPage: React.FC = () => {
         </VGrid>
         <ButtonContainer>
           <StyledButton type="submit" disabled={!formValid}>
-            Sign in
+            {loading ? "Signing in..." : "Sign in"}
           </StyledButton>
         </ButtonContainer>
       </form>
@@ -114,7 +126,7 @@ const SignInPage: React.FC = () => {
 const Container = styled.div`
   width: ${tombac.unit(600)};
   margin: auto;
-  margin-top: ${tombac.space(8)};
+  margin-top: ${tombac.space(30)};
   padding: ${tombac.parse("2sp 4sp")};
   border-radius: ${tombac.unit(4)};
   box-shadow: 0 ${tombac.unit(2)} ${tombac.unit(4)} rgba(0, 0, 0, 0.1);
@@ -122,7 +134,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 60vh;
+  min-height: 30vh;
 `;
 
 const Title = styled(Heading)`
