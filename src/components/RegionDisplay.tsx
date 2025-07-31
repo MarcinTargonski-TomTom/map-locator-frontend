@@ -74,6 +74,9 @@ const MyRegionDisplay = memo(function HybridRegionsDisplay({
     };
 
     map.on("mousemove", handleMapMouseMove);
+    return () => {
+      map.off("mousemove", handleMapMouseMove);
+    };
   }, [map, requestRegions.length]);
 
   return (
