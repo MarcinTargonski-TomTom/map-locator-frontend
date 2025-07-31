@@ -23,6 +23,8 @@ const TRAVEL_MODE_OPTIONS = [
   { value: "PEDESTRIAN" as TravelMode, label: "Pieszy" },
   { value: "BUS" as TravelMode, label: "Autobus" },
 ];
+import MyRegionDisplay from "./RegionDisplay";
+import sampleApiResponse from "../../sampleApiResponse.json";
 
 function Map() {
   const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
@@ -205,6 +207,7 @@ function Map() {
             onShowPointDetails={showPointDetailsModal}
             markerColors={MARKER_COLORS}
           />
+          <MyRegionDisplay apiResponse={sampleApiResponse} />
         </GlMap>
 
         {/* Przycisk dopasowywania lokalizacji */}
@@ -234,7 +237,6 @@ function Map() {
     </>
   );
 }
-
 export default Map;
 
 const MapDiv = styled.div`
