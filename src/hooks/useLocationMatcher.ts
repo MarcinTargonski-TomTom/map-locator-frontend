@@ -1,0 +1,133 @@
+import { useState } from "react";
+import type { PointOfInterest, BudgetType, TravelMode } from "../types/point";
+
+interface LocationMatchRequest {
+  center?: {
+    latitude: number;
+    longitude: number;
+  };
+  value: number;
+  budgetType: string;
+  travelMode: string;
+  name?: string;
+}
+
+interface LocationMatchResponse {
+  [key: string]: unknown;
+}
+
+interface UseLocationMatcherResult {
+  isLoading: boolean;
+  error: string | null;
+  data: LocationMatchResponse | null;
+  matchLocations: (pointsOfInterest: PointOfInterest[]) => Promise<void>;
+}
+
+const mapBudgetType = (budgetType: BudgetType): string => {
+  const mapping: Record<BudgetType, string> = {
+    distanceBudgetInMeters: "DISTANCE",
+    timeBudgetInSec: "TIME",
+    energyBudgetInkWh: "ENERGY",
+    fuelBudgetInLiters: "FUEL",
+  };
+  return mapping[budgetType] || budgetType;
+};
+
+const mapTravelMode = (travelMode: TravelMode): string => {
+  return travelMode;
+};
+
+export const useLocationMatcher = (): UseLocationMatcherResult => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<LocationMatchResponse | null>(null);
+
+  const getAuthToken = (): string | null => {
+    return (
+      localStorage.getItem("authToken") ||
+      localStorage.getItem("token") ||
+      sessionStorage.getItem("authToken") ||
+      sessionStorage.getItem("token") ||
+      null
+    );
+  };
+
+  const matchLocations = async (
+    pointsOfInterest: PointOfInterest[]
+  ): Promise<void> => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        throw new Error("Brak tokenu uwierzytelnienia. Zaloguj się ponownie.");
+      }
+
+      const requestData: LocationMatchRequest[] = pointsOfInterest.map(
+        (poi) => {
+          const baseRequest: LocationMatchRequest = {
+            value: poi.value,
+            budgetType: mapBudgetType(poi.budgetType),
+            travelMode: mapTravelMode(poi.travelMode),
+          };
+
+          if (poi.point) {
+            baseRequest.center = {
+              latitude: poi.point.latitude,
+              longitude: poi.point.longitude,
+            };
+          } else {
+            baseRequest.name = poi.name;
+          }
+
+          return baseRequest;
+        }
+      );
+
+      console.log("Wysyłanie danych do API:", requestData);
+
+      const response = await fetch(
+        "http://localhost:8080/locations/v1/matchLocation",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error(
+            "Nieautoryzowany dostęp. Sprawdź token uwierzytelnienia."
+          );
+        }
+        if (response.status === 403) {
+          throw new Error("Brak uprawnień do wykonania tej operacji.");
+        }
+        throw new Error(`Błąd HTTP: ${response.status} ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      setData(result);
+      console.log("Odpowiedź z API:", result);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Wystąpił nieznany błąd";
+      setError(errorMessage);
+      console.error("Błąd podczas wysyłania danych:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    isLoading,
+    error,
+    data,
+    matchLocations,
+  };
+};

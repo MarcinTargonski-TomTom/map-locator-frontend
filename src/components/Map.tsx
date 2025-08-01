@@ -5,10 +5,130 @@ import {
   type MapModel,
   type MapStyleSettingsState,
 } from "legoland-shared";
+import "mapbox-gl/dist/mapbox-gl.css";
+import "tombac-icons/react/style.css";
 import styled from "styled-components";
+import { MARKER_COLORS } from "../lib/markerColors";
+import { BUDGET_OPTIONS } from "../lib/budgetOptions";
+import type { BudgetType, TravelMode, PointOfInterest } from "../types/point";
+import InfoPanel from "./InfoPanel";
+import SearchPanel from "./SearchPanel";
+import PointDetailsModal from "./MapPointDetailsModal";
+import AddPointFormModal from "./AddPointFormModal";
+import MapClickHandler from "./MapClickHandler";
+import MatchLocationButton from "./MatchLocationButton";
+
+const TRAVEL_MODE_OPTIONS = [
+  { value: "CAR" as TravelMode, label: "Samochód" },
+  { value: "PEDESTRIAN" as TravelMode, label: "Pieszy" },
+  { value: "BUS" as TravelMode, label: "Autobus" },
+];
 
 function Map() {
   const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
+
+  const [pointsOfInterest, setPointsOfInterest] = useState<PointOfInterest[]>(
+    []
+  );
+  const [showPointForm, setShowPointForm] = useState<{
+    isVisible: boolean;
+    longitude: number;
+    latitude: number;
+    tempId: string;
+  } | null>(null);
+
+  const [showPointDetails, setShowPointDetails] = useState<{
+    poi: PointOfInterest;
+    index: number;
+  } | null>(null);
+
+  const addPointOfInterest = (poi: PointOfInterest) => {
+    setPointsOfInterest((prev) => [...prev, poi]);
+  };
+
+  const addSearchPhrase = (
+    text: string,
+    budget: number,
+    budgetType: BudgetType,
+    travelMode: TravelMode
+  ) => {
+    const newPoi: PointOfInterest = {
+      name: text,
+      point: null,
+      value: budget,
+      budgetType,
+      travelMode,
+    };
+    addPointOfInterest(newPoi);
+  };
+
+  const addMapPoint = (longitude: number, latitude: number, tempId: string) => {
+    setShowPointForm({
+      isVisible: true,
+      longitude,
+      latitude,
+      tempId,
+    });
+  };
+
+  const confirmMapPoint = (
+    name: string,
+    value: number,
+    budgetType: BudgetType,
+    travelMode: TravelMode
+  ) => {
+    if (!showPointForm) return;
+
+    const newPoi: PointOfInterest = {
+      name,
+      point: {
+        longitude: showPointForm.longitude,
+        latitude: showPointForm.latitude,
+      },
+      value,
+      budgetType,
+      travelMode,
+    };
+
+    addPointOfInterest(newPoi);
+    setShowPointForm(null);
+  };
+
+  const cancelMapPoint = () => {
+    setShowPointForm(null);
+  };
+
+  const showPointDetailsModal = (poi: PointOfInterest, index: number) => {
+    setShowPointDetails({ poi, index });
+  };
+
+  const closePointDetails = () => {
+    setShowPointDetails(null);
+  };
+
+  const deletePointFromDetails = () => {
+    if (showPointDetails) {
+      removePointOfInterest(showPointDetails.index);
+      setShowPointDetails(null);
+    }
+  };
+
+  const removePointOfInterest = (index: number) => {
+    setPointsOfInterest((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const clearAllPoints = () => {
+    setPointsOfInterest([]);
+    setShowPointForm(null);
+  };
+
+  const exportData = () => {
+    console.log("Dane do wysłania do API:", pointsOfInterest);
+    return pointsOfInterest;
+  };
+
+  const mapPoints = pointsOfInterest.filter((poi) => poi.point !== null);
+  const searchPhrases = pointsOfInterest.filter((poi) => poi.point === null);
 
   const [mapModel, setMapModel] = useState<MapModel>("Genesis");
   const [mapStyleSettings, setMapStyleSettings] =
@@ -25,6 +145,23 @@ function Map() {
   return (
     <>
       <MapDiv>
+        <InfoPanel
+          pointsOfInterest={pointsOfInterest}
+          mapPoints={mapPoints}
+          searchPhrases={searchPhrases}
+          clearAllPoints={clearAllPoints}
+        />
+        <SearchPanel
+          addSearchPhrase={addSearchPhrase}
+          removePointOfInterest={removePointOfInterest}
+          clearAllPoints={clearAllPoints}
+          exportData={exportData}
+          searchPhrases={searchPhrases}
+          pointsOfInterest={pointsOfInterest}
+          budgetOptions={BUDGET_OPTIONS}
+          travelModeOptions={TRAVEL_MODE_OPTIONS}
+        />
+
         <GlMap
           mapStyleSettings={mapStyleSettings}
           onMapStyleSettingsChange={(styles) =>
@@ -60,7 +197,39 @@ function Map() {
               "Satellite",
             ],
           }}
-        ></GlMap>
+        >
+          <MapClickHandler
+            pointsOfInterest={pointsOfInterest}
+            mapPoints={mapPoints}
+            onAddMapPoint={addMapPoint}
+            onShowPointDetails={showPointDetailsModal}
+            markerColors={MARKER_COLORS}
+          />
+        </GlMap>
+
+        {/* Przycisk dopasowywania lokalizacji */}
+        <MatchLocationButton pointsOfInterest={pointsOfInterest} />
+
+        {showPointForm && (
+          <AddPointFormModal
+            longitude={showPointForm.longitude}
+            latitude={showPointForm.latitude}
+            onConfirm={confirmMapPoint}
+            onCancel={cancelMapPoint}
+            budgetOptions={BUDGET_OPTIONS}
+            travelModeOptions={TRAVEL_MODE_OPTIONS}
+          />
+        )}
+
+        {showPointDetails && (
+          <PointDetailsModal
+            poi={showPointDetails.poi}
+            onClose={closePointDetails}
+            onDelete={deletePointFromDetails}
+            budgetOptions={BUDGET_OPTIONS}
+            travelModeOptions={TRAVEL_MODE_OPTIONS}
+          />
+        )}
       </MapDiv>
     </>
   );
