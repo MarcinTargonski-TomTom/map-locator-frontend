@@ -1,6 +1,7 @@
 import { Marker } from "legoland-shared";
 import type { Region as RegionType } from "../types/api";
 import Polygon from "./Polygon";
+import { console } from "inspector";
 
 export interface RegionProps {
   region: RegionType;
@@ -17,6 +18,7 @@ export const Region = ({
   fillOpacity = 0.15,
   strokeWidth = 2,
 }: RegionProps) => {
+  console.log(`Rendering region: ${regionId}`, region);
   return (
     <div key={regionId}>
       <Polygon

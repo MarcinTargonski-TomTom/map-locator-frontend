@@ -1,5 +1,4 @@
 export const MARKER_COLORS = [
-  "#FF0000", // czerwony
   "#00AA00", // zielony
   "#0066FF", // niebieski
   "#FF6600", // pomarańczowy

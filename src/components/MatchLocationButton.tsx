@@ -2,14 +2,17 @@ import { Button, tombac } from "tombac";
 import styled from "styled-components";
 import { useLocationMatcher } from "../hooks/useLocationMatcher";
 import type { PointOfInterest } from "../types/point";
+import type { ApiResponse } from "../types/api";
 
 interface MatchLocationButtonProps {
   pointsOfInterest: PointOfInterest[];
+  setRegions: (regions: ApiResponse[]) => void; // Adjust type as needed
   disabled?: boolean;
 }
 
 function MatchLocationButton({
   pointsOfInterest,
+  setRegions,
   disabled = false,
 }: MatchLocationButtonProps) {
   const { isLoading, error, data, matchLocations } = useLocationMatcher();
@@ -23,6 +26,7 @@ function MatchLocationButton({
     try {
       await matchLocations(pointsOfInterest);
       if (data) {
+        setRegions(data);
         alert("Dopasowanie lokalizacji zakończone pomyślnie!");
       }
     } catch (err) {

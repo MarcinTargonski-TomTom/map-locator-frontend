@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { PointOfInterest, BudgetType, TravelMode } from "../types/point";
+import type { ApiResponse } from "../types/api";
 
 interface LocationMatchRequest {
   center?: {
@@ -19,7 +20,7 @@ interface LocationMatchResponse {
 interface UseLocationMatcherResult {
   isLoading: boolean;
   error: string | null;
-  data: LocationMatchResponse | null;
+  data: ApiResponse[] | null;
   matchLocations: (pointsOfInterest: PointOfInterest[]) => Promise<void>;
 }
 
@@ -40,7 +41,7 @@ const mapTravelMode = (travelMode: TravelMode): string => {
 export const useLocationMatcher = (): UseLocationMatcherResult => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<LocationMatchResponse | null>(null);
+  const [data, setData] = useState<ApiResponse[] | null>(null);
 
   const getAuthToken = (): string | null => {
     return (

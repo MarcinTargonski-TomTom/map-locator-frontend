@@ -4,6 +4,7 @@ import type { ApiResponse } from "../types/api";
 import { Region } from "./Region";
 import type { MapMouseEvent } from "mapbox-gl";
 import MyTooltip from "./Tooltip";
+import { MARKER_COLORS } from "../lib/markerColors";
 
 interface HybridRegionsDisplayProps {
   apiResponse: ApiResponse;
@@ -30,6 +31,7 @@ const MyRegionDisplay = memo(function HybridRegionsDisplay({
   }
 
   function setStylesOnHoveredRegion(regionId: string | null) {
+    if (regionId === null) return;
     const fillId = `${regionId}-fill`;
     const outlineId = `${regionId}-outline`;
 
@@ -43,6 +45,7 @@ const MyRegionDisplay = memo(function HybridRegionsDisplay({
   }
 
   function setDefaultStylesOnRegion(regionId: string | null) {
+    if (regionId === null) return;
     const prevFillId = `${regionId}-fill`;
     const prevOutlineId = `${regionId}-outline`;
 
@@ -78,9 +81,23 @@ const MyRegionDisplay = memo(function HybridRegionsDisplay({
 
   return (
     <>
-      {requestRegions.map(({ region }, index) => {
+      {requestRegions.map(({ pointOfInterest, region }, index) => {
+        // region.center = {
+        //   longitude: parseFloat(pointOfInterest.center.longitude.toFixed(4)),
+        //   latitude: parseFloat(pointOfInterest.center.latitude.toFixed(4)),
+        // };
+        // region.boundary = region.boundary.map((point) => ({
+        //   longitude: parseFloat(point.longitude.toFixed(4)),
+        //   latitude: parseFloat(point.latitude.toFixed(4)),
+        // }));
+        // // Remove repeated points based on longitude and latitude
+        // region.boundary = region.boundary.filter((point, idx, arr) =>
+        //   arr.findIndex(p => p.longitude === point.longitude && p.latitude === point.latitude) === idx
+        // );
+        // console.log(pointOfInterest.name, region.boundary);
         return (
           <Region
+            color={MARKER_COLORS[index % MARKER_COLORS.length]}
             key={`request-region-${index}`}
             region={region}
             regionId={`request-region-${index}`}
@@ -91,7 +108,7 @@ const MyRegionDisplay = memo(function HybridRegionsDisplay({
       <Region
         region={responseRegion}
         regionId="response-region"
-        color="#4caf50"
+        color="#FF0000" // czerwony
       ></Region>
 
       <MyTooltip

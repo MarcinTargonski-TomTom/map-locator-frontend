@@ -25,6 +25,7 @@ const TRAVEL_MODE_OPTIONS = [
 ];
 import MyRegionDisplay from "./RegionDisplay";
 import sampleApiResponse from "../../sampleApiResponse.json";
+import type { ApiResponse } from "../types/api";
 
 function Map() {
   const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
@@ -32,6 +33,7 @@ function Map() {
   const [pointsOfInterest, setPointsOfInterest] = useState<PointOfInterest[]>(
     []
   );
+  const [regions, setRegions] = useState<ApiResponse[] | null>(null);
   const [showPointForm, setShowPointForm] = useState<{
     isVisible: boolean;
     longitude: number;
@@ -120,6 +122,7 @@ function Map() {
   };
 
   const clearAllPoints = () => {
+    setRegions(null);
     setPointsOfInterest([]);
     setShowPointForm(null);
   };
@@ -207,11 +210,15 @@ function Map() {
             onShowPointDetails={showPointDetailsModal}
             markerColors={MARKER_COLORS}
           />
-          <MyRegionDisplay apiResponse={sampleApiResponse} />
+
+          {regions != null && <MyRegionDisplay apiResponse={regions[10]} />}
         </GlMap>
 
         {/* Przycisk dopasowywania lokalizacji */}
-        <MatchLocationButton pointsOfInterest={pointsOfInterest} />
+        <MatchLocationButton
+          pointsOfInterest={pointsOfInterest}
+          setRegions={setRegions}
+        />
 
         {showPointForm && (
           <AddPointFormModal
