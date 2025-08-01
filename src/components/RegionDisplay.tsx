@@ -31,7 +31,6 @@ const MyRegionDisplay = function HybridRegionsDisplay({
   }
 
   function setStylesOnHoveredRegion(regionId: string | null) {
-    map.moveLayer("response-region-fill");
     if (regionId === null) return;
     const fillId = `${regionId}-fill`;
     const outlineId = `${regionId}-outline`;
@@ -43,6 +42,7 @@ const MyRegionDisplay = function HybridRegionsDisplay({
       map.setPaintProperty(fillId, "fill-opacity", hoverOpacity);
       map.setPaintProperty(outlineId, "line-width", hoverWidth);
     }
+    // map.moveLayer("response-region-fill"); //todo
   }
 
   function setDefaultStylesOnRegion(regionId: string | null) {
@@ -93,11 +93,13 @@ const MyRegionDisplay = function HybridRegionsDisplay({
         );
       })}
 
-      <Region
-        region={responseRegion}
-        regionId="response-region"
-        color="#FF0000" // czerwony
-      ></Region>
+      {responseRegion.center && (
+        <Region
+          region={responseRegion}
+          regionId="response-region"
+          color="#FF0000" // czerwony
+        ></Region>
+      )}
 
       <MyTooltip
         isVisible={!!hoveredRegion}
