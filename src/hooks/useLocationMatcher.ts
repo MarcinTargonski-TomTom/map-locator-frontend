@@ -10,7 +10,7 @@ interface LocationMatchRequest {
   value: number;
   budgetType: string;
   travelMode: string;
-  name?: string;
+  name: string;
 }
 
 interface LocationMatchResponse {
@@ -68,6 +68,7 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
       const requestData: LocationMatchRequest[] = pointsOfInterest.map(
         (poi) => {
           const baseRequest: LocationMatchRequest = {
+            name: poi.name,
             value: poi.value,
             budgetType: mapBudgetType(poi.budgetType),
             travelMode: mapTravelMode(poi.travelMode),

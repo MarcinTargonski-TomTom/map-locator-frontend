@@ -211,7 +211,7 @@ function Map() {
             markerColors={MARKER_COLORS}
           />
 
-          {regions != null && <MyRegionDisplay apiResponse={regions[10]} />}
+          {regions != null && <MyRegionDisplay apiResponse={regions[0]} />}
         </GlMap>
 
         {/* Przycisk dopasowywania lokalizacji */}

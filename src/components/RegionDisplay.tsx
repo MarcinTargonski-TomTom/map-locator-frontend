@@ -11,7 +11,7 @@ interface HybridRegionsDisplayProps {
   map?: any;
 }
 
-const MyRegionDisplay = memo(function HybridRegionsDisplay({
+const MyRegionDisplay = function HybridRegionsDisplay({
   apiResponse: { requestRegions, responseRegion },
   map,
 }: HybridRegionsDisplayProps) {
@@ -48,7 +48,7 @@ const MyRegionDisplay = memo(function HybridRegionsDisplay({
     if (regionId === null) return;
     const prevFillId = `${regionId}-fill`;
     const prevOutlineId = `${regionId}-outline`;
-
+    console.log(regionId);
     const defaultOpacity = 0.2;
     const defaultWidth = 3;
 
@@ -77,24 +77,12 @@ const MyRegionDisplay = memo(function HybridRegionsDisplay({
     };
 
     map.on("mousemove", handleMapMouseMove);
-  }, [map, requestRegions.length]);
+    map.moveLayer("response-region-fill");
+  }, [map, requestRegions]);
 
   return (
     <>
-      {requestRegions.map(({ pointOfInterest, region }, index) => {
-        // region.center = {
-        //   longitude: parseFloat(pointOfInterest.center.longitude.toFixed(4)),
-        //   latitude: parseFloat(pointOfInterest.center.latitude.toFixed(4)),
-        // };
-        // region.boundary = region.boundary.map((point) => ({
-        //   longitude: parseFloat(point.longitude.toFixed(4)),
-        //   latitude: parseFloat(point.latitude.toFixed(4)),
-        // }));
-        // // Remove repeated points based on longitude and latitude
-        // region.boundary = region.boundary.filter((point, idx, arr) =>
-        //   arr.findIndex(p => p.longitude === point.longitude && p.latitude === point.latitude) === idx
-        // );
-        // console.log(pointOfInterest.name, region.boundary);
+      {requestRegions.map(({ region }, index) => {
         return (
           <Region
             color={MARKER_COLORS[index % MARKER_COLORS.length]}
@@ -125,6 +113,6 @@ const MyRegionDisplay = memo(function HybridRegionsDisplay({
       />
     </>
   );
-});
+};
 
 export default withMap(MyRegionDisplay as any);
