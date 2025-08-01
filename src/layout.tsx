@@ -3,6 +3,8 @@ import { AppNavbar } from "./components/Navbar.tsx";
 import MapPage from "./pages/MapPage.tsx";
 import PageNotFound from "./pages/PageNotFound.tsx";
 import { ToastsProvider, TombacApp } from "tombac";
+import SignInPage from "./pages/SignInPage.tsx";
+import SignUpPage from "./pages/SignUpPage.tsx";
 
 const Layout = () => {
   return (
@@ -12,6 +14,8 @@ const Layout = () => {
           <AppNavbar />
           <Routes>
             <Route path="/map" element={<MapPage />} />
+            <Route path="/sign-in" element={<SignInPage />} />
+            <Route path="/sign-up" element={<SignUpPage />} />
             <Route path="/*" element={<PageNotFound />} />
           </Routes>
         </ToastsProvider>
