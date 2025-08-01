@@ -31,6 +31,7 @@ const MyRegionDisplay = function HybridRegionsDisplay({
   }
 
   function setStylesOnHoveredRegion(regionId: string | null) {
+    map.moveLayer("response-region-fill");
     if (regionId === null) return;
     const fillId = `${regionId}-fill`;
     const outlineId = `${regionId}-outline`;
@@ -77,7 +78,6 @@ const MyRegionDisplay = function HybridRegionsDisplay({
     };
 
     map.on("mousemove", handleMapMouseMove);
-    map.moveLayer("response-region-fill");
   }, [map, requestRegions]);
 
   return (

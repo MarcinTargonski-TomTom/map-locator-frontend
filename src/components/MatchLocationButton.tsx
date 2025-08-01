@@ -15,7 +15,7 @@ function MatchLocationButton({
   setRegions,
   disabled = false,
 }: MatchLocationButtonProps) {
-  const { isLoading, error, data, matchLocations } = useLocationMatcher();
+  const { isLoading, error, matchLocations } = useLocationMatcher();
 
   const handleMatch = async () => {
     if (pointsOfInterest.length === 0) {
@@ -24,10 +24,14 @@ function MatchLocationButton({
     }
 
     try {
-      await matchLocations(pointsOfInterest);
-      if (data) {
-        setRegions(data);
+      const newData = await matchLocations(pointsOfInterest);
+      if (!newData) {
+        alert("Brak danych do wyświetlenia");
+        return;
+      } else {
         alert("Dopasowanie lokalizacji zakończone pomyślnie!");
+
+        setRegions(newData);
       }
     } catch (err) {
       // Error już jest obsłużony w hooku
@@ -48,7 +52,7 @@ function MatchLocationButton({
 
       {error && <ErrorMessage>Błąd: {error}</ErrorMessage>}
 
-      {data && !error && (
+      {!error && (
         <SuccessMessage>
           Dopasowanie zakończone pomyślnie! Sprawdź konsolę dla szczegółów.
         </SuccessMessage>

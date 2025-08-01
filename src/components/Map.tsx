@@ -26,6 +26,7 @@ const TRAVEL_MODE_OPTIONS = [
 import MyRegionDisplay from "./RegionDisplay";
 import sampleApiResponse from "../../sampleApiResponse.json";
 import type { ApiResponse } from "../types/api";
+import { Button } from "tombac";
 
 function Map() {
   const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
@@ -34,6 +35,7 @@ function Map() {
     []
   );
   const [regions, setRegions] = useState<ApiResponse[] | null>(null);
+  const [responseIndex, setResponseIndex] = useState<number>(0);
   const [showPointForm, setShowPointForm] = useState<{
     isVisible: boolean;
     longitude: number;
@@ -211,8 +213,33 @@ function Map() {
             markerColors={MARKER_COLORS}
           />
 
-          {regions != null && <MyRegionDisplay apiResponse={regions[0]} />}
+          {regions != null && (
+            <MyRegionDisplay apiResponse={regions[responseIndex]} />
+          )}
         </GlMap>
+
+        {regions && regions.length > 0 && (
+          <>
+            <Button
+              onClick={() => {
+                if (responseIndex < regions.length - 1) {
+                  setResponseIndex((prev) => prev + 1);
+                }
+              }}
+            >
+              Next Region
+            </Button>
+            <Button
+              onClick={() => {
+                if (responseIndex > 0) {
+                  setResponseIndex((prev) => prev - 1);
+                }
+              }}
+            >
+              Previous Region
+            </Button>
+          </>
+        )}
 
         {/* Przycisk dopasowywania lokalizacji */}
         <MatchLocationButton
