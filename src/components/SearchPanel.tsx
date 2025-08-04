@@ -1,34 +1,45 @@
 import { Button, tombac } from "tombac";
 import SearchForm from "./SearchForm";
-import type { BudgetType, PointOfInterest, TravelMode } from "../types/point";
+import type { BudgetType, TravelMode } from "../types/api";
 import styled from "styled-components";
+import { MapContext } from "../context/mapContext";
+import { useContext } from "react";
+import { TRAVEL_MODE_OPTIONS, type PointOfInterestDTO } from "../types/api";
+import { BUDGET_OPTIONS } from "../types/api";
 
-type SearchPanelProps = {
-  addSearchPhrase: (
+function SearchPanel() {
+  const {
+    setPointsOfInterest,
+    pointsOfInterest,
+    reset: clearAllPoints,
+  } = useContext(MapContext);
+  const searchPhrases = pointsOfInterest.filter((poi) => poi.center === null);
+
+  const exportData = () => {
+    console.log("Dane do wysłania do API:", pointsOfInterest);
+    return pointsOfInterest;
+  };
+
+  const removePointOfInterest = (index: number) => {
+    setPointsOfInterest(pointsOfInterest.filter((_, i) => i !== index));
+  };
+
+  const addSearchPhrase = (
     text: string,
     budget: number,
     budgetType: BudgetType,
     travelMode: TravelMode
-  ) => void;
-  removePointOfInterest: (index: number) => void;
-  clearAllPoints: () => void;
-  exportData: () => void;
-  searchPhrases: PointOfInterest[];
-  pointsOfInterest: PointOfInterest[];
-  budgetOptions: Array<{ value: BudgetType; label: string }>;
-  travelModeOptions: Array<{ value: TravelMode; label: string }>;
-};
+  ) => {
+    const newPoi: PointOfInterestDTO = {
+      name: text,
+      center: null,
+      value: budget,
+      budgetType,
+      travelMode,
+    };
+    setPointsOfInterest([...pointsOfInterest, newPoi]);
+  };
 
-function SearchPanel({
-  addSearchPhrase,
-  removePointOfInterest,
-  clearAllPoints,
-  exportData,
-  searchPhrases,
-  pointsOfInterest,
-  budgetOptions,
-  travelModeOptions,
-}: SearchPanelProps) {
   return (
     <Panel>
       <div>
@@ -36,8 +47,8 @@ function SearchPanel({
       </div>
       <SearchForm
         onAddPhrase={addSearchPhrase}
-        budgetOptions={budgetOptions}
-        travelModeOptions={travelModeOptions}
+        budgetOptions={BUDGET_OPTIONS}
+        travelModeOptions={TRAVEL_MODE_OPTIONS}
       />
 
       {searchPhrases.length > 0 && (
@@ -70,12 +81,12 @@ function SearchPanel({
                 <div style={{ fontWeight: "bold" }}>{poi.name}</div>
                 <div style={{ color: "#666", fontSize: "10px" }}>
                   {
-                    budgetOptions.find((opt) => opt.value === poi.budgetType)
+                    BUDGET_OPTIONS.find((opt) => opt.value === poi.budgetType)
                       ?.label
                   }
                   : {poi.value} |{" "}
                   {
-                    travelModeOptions.find(
+                    TRAVEL_MODE_OPTIONS.find(
                       (opt) => opt.value === poi.travelMode
                     )?.label
                   }

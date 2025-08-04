@@ -1,5 +1,5 @@
 import { Button, Input, Select, Label, tombac } from "tombac";
-import type { BudgetType, TravelMode } from "../types/point";
+import type { BudgetType, TravelMode } from "../types/api";
 import { useState } from "react";
 import styled from "styled-components";
 

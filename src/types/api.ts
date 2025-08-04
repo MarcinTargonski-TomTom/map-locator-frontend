@@ -10,13 +10,33 @@ export interface Region {
 
 export interface PointOfInterestDTO {
   name: string | null;
-  center: PointDTO;
+  center: PointDTO | null;
   value: number;
-  budgetType: "TIME" | "DISTANCE" | "ENERGY" | "FUEL";
-  travelMode: "CAR" | "PEDESTRIAN" | "BUS";
+  budgetType: BudgetType;
+  travelMode: TravelMode;
 }
 
 export interface ApiResponse {
   requestRegions: { pointOfInterest: PointOfInterestDTO; region: Region }[];
   responseRegion: Region;
 }
+
+export type TravelMode = "CAR" | "PEDESTRIAN" | "BUS";
+export const TRAVEL_MODE_OPTIONS = [
+  { value: "CAR" as TravelMode, label: "Samochód" },
+  { value: "PEDESTRIAN" as TravelMode, label: "Pieszy" },
+  { value: "BUS" as TravelMode, label: "Autobus" },
+];
+
+export type BudgetType =
+  | "distanceBudgetInMeters"
+  | "timeBudgetInSec"
+  | "energyBudgetInkWh"
+  | "fuelBudgetInLiters";
+
+export const BUDGET_OPTIONS = [
+  { value: "distanceBudgetInMeters" as BudgetType, label: "Dystans (metry)" },
+  { value: "timeBudgetInSec" as BudgetType, label: "Czas (sekundy)" },
+  { value: "energyBudgetInkWh" as BudgetType, label: "Energia (kWh)" },
+  { value: "fuelBudgetInLiters" as BudgetType, label: "Paliwo (litry)" },
+];

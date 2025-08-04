@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { withMap } from "legoland-shared";
 import type { ApiResponse } from "../types/api";
 import { Region } from "./Region";
@@ -23,8 +23,8 @@ const MyRegionDisplay = function HybridRegionsDisplay({
     const features = map.queryRenderedFeatures(e.point, {
       layers: [
         ...requestRegions.map((_, index) => `request-region-${index}-fill`),
-        "response-region-fill",
-      ],
+        responseRegion.center != null ? "response-region-fill" : null,
+      ].filter(Boolean),
     });
 
     return features[0] ? features[0].layer.id.replace("-fill", "") : null;
@@ -63,7 +63,6 @@ const MyRegionDisplay = function HybridRegionsDisplay({
 
       const newHovered = getHoveredRegionId(e);
       if (newHovered !== lastHovered.current) {
-        setDefaultStylesOnRegion(lastHovered.current);
         if (newHovered) {
           setStylesOnHoveredRegion(newHovered);
 
@@ -71,6 +70,7 @@ const MyRegionDisplay = function HybridRegionsDisplay({
         } else {
           map.getCanvas().style.cursor = "";
         }
+        setDefaultStylesOnRegion(lastHovered.current);
 
         lastHovered.current = newHovered;
         setHoveredRegion(newHovered);

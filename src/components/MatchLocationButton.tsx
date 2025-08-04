@@ -1,20 +1,15 @@
 import { Button, tombac } from "tombac";
 import styled from "styled-components";
 import { useLocationMatcher } from "../hooks/useLocationMatcher";
-import type { PointOfInterest } from "../types/point";
-import type { ApiResponse } from "../types/api";
+import { useContext } from "react";
+import { MapContext } from "../context/mapContext";
 
 interface MatchLocationButtonProps {
-  pointsOfInterest: PointOfInterest[];
-  setRegions: (regions: ApiResponse[]) => void; // Adjust type as needed
   disabled?: boolean;
 }
 
-function MatchLocationButton({
-  pointsOfInterest,
-  setRegions,
-  disabled = false,
-}: MatchLocationButtonProps) {
+function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
+  const { pointsOfInterest, setRegions } = useContext(MapContext);
   const { isLoading, error, matchLocations } = useLocationMatcher();
 
   const handleMatch = async () => {

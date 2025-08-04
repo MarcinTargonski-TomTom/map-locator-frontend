@@ -1,5 +1,5 @@
-import { useState } from "react";
-import type { BudgetType, TravelMode } from "../types/point";
+import { useContext, useState } from "react";
+import type { BudgetType, TravelMode } from "../types/api";
 import {
   Button,
   Heading,
@@ -12,37 +12,50 @@ import {
   tombac,
 } from "tombac";
 import styled from "styled-components";
+import { BUDGET_OPTIONS } from "../types/api";
+import { TRAVEL_MODE_OPTIONS, type PointOfInterestDTO } from "../types/api";
+import { MapContext } from "../context/mapContext";
 
 function AddPointFormModal({
   longitude,
   latitude,
-  onConfirm,
-  onCancel,
-  budgetOptions,
-  travelModeOptions,
+  onClose,
 }: {
   longitude: number;
   latitude: number;
-  onConfirm: (
-    name: string,
-    value: number,
-    budgetType: BudgetType,
-    travelMode: TravelMode
-  ) => void;
-  onCancel: () => void;
-  budgetOptions: Array<{ value: BudgetType; label: string }>;
-  travelModeOptions: Array<{ value: TravelMode; label: string }>;
+  onClose: () => void;
 }) {
+  const { pointsOfInterest, setPointsOfInterest } = useContext(MapContext);
   const [name, setName] = useState("");
   const [value, setValue] = useState<number>(0);
-  const [budgetType, setBudgetType] = useState(budgetOptions[0]);
-  const [travelMode, setTravelMode] = useState(travelModeOptions[0]);
+  const [budgetType, setBudgetType] = useState(BUDGET_OPTIONS[0]);
+  const [travelMode, setTravelMode] = useState(TRAVEL_MODE_OPTIONS[0]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim() && value > 0) {
-      onConfirm(name.trim(), value, budgetType.value, travelMode.value);
+      addMapPoint(name.trim(), value, budgetType.value, travelMode.value);
     }
+  };
+
+  const addMapPoint = (
+    name: string,
+    value: number,
+    budgetType: BudgetType,
+    travelMode: TravelMode
+  ) => {
+    const newPoi: PointOfInterestDTO = {
+      name,
+      center: {
+        longitude: longitude,
+        latitude: latitude,
+      },
+      value,
+      budgetType,
+      travelMode,
+    };
+    setPointsOfInterest([...pointsOfInterest, newPoi]);
+    onClose();
   };
 
   return (
@@ -82,7 +95,7 @@ function AddPointFormModal({
             <StyledLabel>Typ budżetu:</StyledLabel>
             <Select
               value={budgetType}
-              options={budgetOptions}
+              options={BUDGET_OPTIONS}
               onChange={(selectedOption) => {
                 if (selectedOption && !Array.isArray(selectedOption)) {
                   setBudgetType(
@@ -98,7 +111,7 @@ function AddPointFormModal({
             <StyledLabel>Tryb podróży:</StyledLabel>
             <Select
               value={travelMode}
-              options={travelModeOptions}
+              options={TRAVEL_MODE_OPTIONS}
               onChange={(selectedOption) => {
                 if (selectedOption && !Array.isArray(selectedOption)) {
                   setTravelMode(
@@ -111,7 +124,7 @@ function AddPointFormModal({
           </FieldContainer>
 
           <div style={{ display: "flex", gap: "10px" }}>
-            <StyledButton variant="secondary" onClick={onCancel}>
+            <StyledButton variant="secondary" onClick={onClose}>
               Anuluj
             </StyledButton>
             <StyledButton

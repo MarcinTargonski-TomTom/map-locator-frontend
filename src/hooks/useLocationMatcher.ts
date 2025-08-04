@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { PointOfInterest, BudgetType, TravelMode } from "../types/point";
-import type { ApiResponse } from "../types/api";
+import type { BudgetType, TravelMode } from "../types/api";
+import type { ApiResponse, PointOfInterestDTO } from "../types/api";
 
 interface LocationMatchRequest {
   center?: {
@@ -10,18 +10,14 @@ interface LocationMatchRequest {
   value: number;
   budgetType: string;
   travelMode: string;
-  name: string;
-}
-
-interface LocationMatchResponse {
-  [key: string]: unknown;
+  name: string | null;
 }
 
 interface UseLocationMatcherResult {
   isLoading: boolean;
   error: string | null;
   matchLocations: (
-    pointsOfInterest: PointOfInterest[]
+    pointsOfInterest: PointOfInterestDTO[]
   ) => Promise<ApiResponse[] | void>;
 }
 
@@ -54,7 +50,7 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
   };
 
   const matchLocations = async (
-    pointsOfInterest: PointOfInterest[]
+    pointsOfInterest: PointOfInterestDTO[]
   ): Promise<ApiResponse[] | void> => {
     setIsLoading(true);
     setError(null);
@@ -74,10 +70,10 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
             travelMode: mapTravelMode(poi.travelMode),
           };
 
-          if (poi.point) {
+          if (poi.center) {
             baseRequest.center = {
-              latitude: poi.point.latitude,
-              longitude: poi.point.longitude,
+              latitude: poi.center.latitude,
+              longitude: poi.center.longitude,
             };
           }
 

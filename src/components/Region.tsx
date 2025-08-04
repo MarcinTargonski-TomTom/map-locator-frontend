@@ -1,4 +1,3 @@
-import { Marker } from "legoland-shared";
 import type { Region as RegionType } from "../types/api";
 import Polygon from "./Polygon";
 

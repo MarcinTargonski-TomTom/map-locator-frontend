@@ -1,22 +1,22 @@
 import { useMap } from "legoland-shared";
-import { useEffect } from "react";
-import type { PointOfInterest } from "../types/point";
+import { useContext, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
+import { MapContext } from "../context/mapContext";
+import type { PointOfInterestDTO } from "../types/api";
+import { MARKER_COLORS } from "../lib/markerColors";
 
 function MapClickHandler({
-  pointsOfInterest,
-  mapPoints,
   onAddMapPoint,
   onShowPointDetails,
-  markerColors,
 }: {
-  pointsOfInterest: PointOfInterest[];
-  mapPoints: PointOfInterest[];
   onAddMapPoint: (lng: number, lat: number, tempId: string) => void;
-  onShowPointDetails: (poi: PointOfInterest, index: number) => void;
-  markerColors: string[];
+  onShowPointDetails: (poi: PointOfInterestDTO, index: number) => void;
 }) {
+  const { pointsOfInterest } = useContext(MapContext);
   const { map } = useMap();
+  const mapPoints = pointsOfInterest.filter(
+    (poi: PointOfInterestDTO) => poi.center !== null
+  );
 
   useEffect(() => {
     if (!map) return;
@@ -41,18 +41,18 @@ function MapClickHandler({
     existingMarkers.forEach((marker) => marker.remove());
 
     mapPoints.forEach((poi, index) => {
-      if (!poi.point) return;
+      if (!poi.center) return;
 
       const el = document.createElement("div");
       el.className = "custom-marker";
       el.style.cursor = "pointer";
       el.title = `${
         poi.name
-      } - Kliknij aby zobaczyć szczegóły (${poi.point.longitude.toFixed(
+      } - Kliknij aby zobaczyć szczegóły (${poi.center.longitude.toFixed(
         4
-      )}, ${poi.point.latitude.toFixed(4)})`;
+      )}, ${poi.center.latitude.toFixed(4)})`;
 
-      const color = markerColors[index % markerColors.length];
+      const color = MARKER_COLORS[index % MARKER_COLORS.length];
 
       el.innerHTML = `
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -71,7 +71,7 @@ function MapClickHandler({
       });
 
       new mapboxgl.Marker(el)
-        .setLngLat([poi.point.longitude, poi.point.latitude])
+        .setLngLat([poi.center.longitude, poi.center.latitude])
         .addTo(map);
     });
 
@@ -79,7 +79,7 @@ function MapClickHandler({
       const markers = document.querySelectorAll(".custom-marker");
       markers.forEach((marker) => marker.remove());
     };
-  }, [map, mapPoints, onShowPointDetails, markerColors, pointsOfInterest]);
+  }, [map, mapPoints, onShowPointDetails, MARKER_COLORS, pointsOfInterest]);
 
   return null;
 }
