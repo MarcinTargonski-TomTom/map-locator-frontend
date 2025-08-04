@@ -24,7 +24,7 @@ export function useSignIn(): SignInResult {
 
       const data: Tokens = await response.json();
       return data;
-    } catch (err: any) {
+    } catch (err: Error | unknown) {
       console.error("Sign in error:", err);
       throw err;
     }

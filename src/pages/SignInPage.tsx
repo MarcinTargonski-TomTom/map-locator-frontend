@@ -33,10 +33,10 @@ const SignInPage = () => {
     try {
       const tokens: Tokens = await signIn(credentials);
       addToast("Sign in successful!", "success");
-      setTokens(tokens);
+      setTokens(tokens.auth);
       navigate("/map");
-    } catch (err: any) {
-      addToast(err.message || "Sign in failed", "danger");
+    } catch (err: Error | unknown) {
+      addToast((err as Error).message || "Sign in failed", "danger");
     }
   };
 

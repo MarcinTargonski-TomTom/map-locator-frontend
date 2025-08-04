@@ -21,7 +21,7 @@ export function useSignUp(): SignUpResult {
         const data = await response.json();
         throw new Error(data.message || "Registration failed");
       }
-    } catch (err: any) {
+    } catch (err: Error | unknown) {
       console.error("Registration error:", err);
       throw err;
     }
