@@ -13,7 +13,7 @@ interface RegionDisplayProps {
 const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
   const { regions, responseIndex } = useContext(MapContext);
 
-  if (regions == null || regions.length === 0) return null;
+  if (regions === null || regions.length === 0) return null;
 
   const { requestRegions, responseRegion } = regions[responseIndex];
 
