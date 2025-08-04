@@ -79,7 +79,7 @@ function MapClickHandler({
       const markers = document.querySelectorAll(".custom-marker");
       markers.forEach((marker) => marker.remove());
     };
-  }, [map, mapPoints, onShowPointDetails, MARKER_COLORS, pointsOfInterest]);
+  }, [map, mapPoints, onShowPointDetails, pointsOfInterest]);
 
   return null;
 }
