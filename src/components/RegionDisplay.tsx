@@ -25,7 +25,7 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
     const features = map.queryRenderedFeatures(e.point, {
       layers: [
         ...requestRegions.map((_, index) => `request-region-${index}-fill`),
-        responseRegion.center != null ? "response-region-fill" : null,
+        responseRegion.center !== null ? "response-region-fill" : null,
       ].filter(Boolean),
     });
 
