@@ -1,7 +1,4 @@
-import React, { type FC } from "react";
-import { Input, FormGroup, Label, Box } from "tombac";
-import styled from "styled-components";
-import { FormTextFieldEntry } from "./FormTextFieldEntry";
+import React from "react";
 import { FormFieldEntry } from "./FormFieldEntry";
 
 type FormPasswordFieldEntryProps = {
