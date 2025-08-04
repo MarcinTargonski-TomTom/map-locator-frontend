@@ -100,14 +100,3 @@ const ErrorMessage = styled.div`
   text-align: center;
   border: 1px solid ${tombac.color("danger", 300)};
 `;
-
-const SuccessMessage = styled.div`
-  background-color: ${tombac.color("neutral", 100)};
-  color: ${tombac.color("success", 600)};
-  padding: ${tombac.space(1)} ${tombac.space(2)};
-  border-radius: ${tombac.unit(4)};
-  font-size: ${tombac.unit(12)};
-  max-width: ${tombac.unit(300)};
-  text-align: center;
-  border: 1px solid ${tombac.color("success", 300)};
-`;
