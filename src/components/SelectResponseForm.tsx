@@ -5,7 +5,7 @@ import { Button } from "tombac";
 const SelectResponseForm = () => {
   const { regions, responseIndex, setResponseIndex } = useContext(MapContext);
 
-  return regions != null && regions.length > 0 ? (
+  return regions !== null && regions.length > 0 ? (
     <>
       <Button
         onClick={() => {
