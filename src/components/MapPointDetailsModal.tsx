@@ -1,26 +1,34 @@
 import { Button, Heading, Label, Modal, ModalLayout, tombac } from "tombac";
-import type { BudgetType, PointOfInterest, TravelMode } from "../types/point";
 import styled from "styled-components";
+import { TRAVEL_MODE_OPTIONS } from "../types/api";
+import { BUDGET_OPTIONS } from "../types/api";
+import { useContext } from "react";
+import { MapContext } from "../context/mapContext";
 
 function PointDetailsModal({
-  poi,
+  index,
   onClose,
-  onDelete,
-  budgetOptions,
-  travelModeOptions,
 }: {
-  poi: PointOfInterest;
+  index: number;
   onClose: () => void;
-  onDelete: () => void;
-  budgetOptions: Array<{ value: BudgetType; label: string }>;
-  travelModeOptions: Array<{ value: TravelMode; label: string }>;
 }) {
+  const { setPointsOfInterest, pointsOfInterest } = useContext(MapContext);
+  const poi = pointsOfInterest[index];
   const budgetLabel =
-    budgetOptions.find((opt) => opt.value === poi.budgetType)?.label ||
+    BUDGET_OPTIONS.find((opt) => opt.value === poi.budgetType)?.label ||
     poi.budgetType;
   const travelLabel =
-    travelModeOptions.find((opt) => opt.value === poi.travelMode)?.label ||
+    TRAVEL_MODE_OPTIONS.find((opt) => opt.value === poi.travelMode)?.label ||
     poi.travelMode;
+
+  const deletePoint = () => {
+    removePointOfInterest(index);
+    onClose();
+  };
+
+  const removePointOfInterest = (index: number) => {
+    setPointsOfInterest(pointsOfInterest.filter((_, i) => i !== index));
+  };
 
   return (
     <Modal isOpen={true}>
@@ -35,9 +43,9 @@ function PointDetailsModal({
         </ContentDiv>
 
         <StyledLabel>Współrzędne:</StyledLabel>
-        {poi.point && (
+        {poi.center && (
           <ContentDiv>
-            {poi.point.longitude.toFixed(4)}, {poi.point.latitude.toFixed(4)}
+            {poi.center.longitude.toFixed(4)}, {poi.center.latitude.toFixed(4)}
           </ContentDiv>
         )}
 
@@ -65,7 +73,7 @@ function PointDetailsModal({
             $margin="1sp"
             $borderRadius="1u"
             $flex="1"
-            onClick={onDelete}
+            onClick={deletePoint}
           >
             Usuń punkt
           </Button>

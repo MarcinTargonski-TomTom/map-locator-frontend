@@ -1,18 +1,16 @@
 import { Button, tombac } from "tombac";
 import styled from "styled-components";
 import { useLocationMatcher } from "../hooks/useLocationMatcher";
-import type { PointOfInterest } from "../types/point";
+import { useContext } from "react";
+import { MapContext } from "../context/mapContext";
 
 interface MatchLocationButtonProps {
-  pointsOfInterest: PointOfInterest[];
   disabled?: boolean;
 }
 
-function MatchLocationButton({
-  pointsOfInterest,
-  disabled = false,
-}: MatchLocationButtonProps) {
-  const { isLoading, error, data, matchLocations } = useLocationMatcher();
+function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
+  const { pointsOfInterest, setRegions } = useContext(MapContext);
+  const { isLoading, error, matchLocations } = useLocationMatcher();
 
   const handleMatch = async () => {
     if (pointsOfInterest.length === 0) {
@@ -21,9 +19,14 @@ function MatchLocationButton({
     }
 
     try {
-      await matchLocations(pointsOfInterest);
-      if (data) {
+      const newData = await matchLocations(pointsOfInterest);
+      if (!newData) {
+        alert("Brak danych do wyświetlenia");
+        return;
+      } else {
         alert("Dopasowanie lokalizacji zakończone pomyślnie!");
+
+        setRegions(newData);
       }
     } catch (err) {
       // Error już jest obsłużony w hooku
@@ -43,12 +46,6 @@ function MatchLocationButton({
       </StyledButton>
 
       {error && <ErrorMessage>Błąd: {error}</ErrorMessage>}
-
-      {data && !error && (
-        <SuccessMessage>
-          Dopasowanie zakończone pomyślnie! Sprawdź konsolę dla szczegółów.
-        </SuccessMessage>
-      )}
     </ButtonContainer>
   );
 }
@@ -102,15 +99,4 @@ const ErrorMessage = styled.div`
   max-width: ${tombac.unit(300)};
   text-align: center;
   border: 1px solid ${tombac.color("danger", 300)};
-`;
-
-const SuccessMessage = styled.div`
-  background-color: ${tombac.color("neutral", 100)};
-  color: ${tombac.color("success", 600)};
-  padding: ${tombac.space(1)} ${tombac.space(2)};
-  border-radius: ${tombac.unit(4)};
-  font-size: ${tombac.unit(12)};
-  max-width: ${tombac.unit(300)};
-  text-align: center;
-  border: 1px solid ${tombac.color("success", 300)};
 `;

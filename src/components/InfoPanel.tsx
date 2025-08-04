@@ -1,21 +1,14 @@
 import { Box, Button } from "tombac";
-import type { PointOfInterest } from "../types/point";
 import { MARKER_COLORS } from "../lib/markerColors";
 import styled from "styled-components";
+import { MapContext } from "../context/mapContext";
+import { useContext } from "react";
 
-interface InfoPanelProps {
-  pointsOfInterest: PointOfInterest[];
-  mapPoints: PointOfInterest[];
-  searchPhrases: PointOfInterest[];
-  clearAllPoints: () => void;
-}
+function InfoPanel() {
+  const { pointsOfInterest, reset: clearAllPoints } = useContext(MapContext);
+  const mapPoints = pointsOfInterest.filter((poi) => poi.center !== null);
+  const searchPhrases = pointsOfInterest.filter((poi) => poi.center === null);
 
-function InfoPanel({
-  pointsOfInterest,
-  mapPoints,
-  searchPhrases,
-  clearAllPoints,
-}: InfoPanelProps) {
   return (
     <Box as={Panel}>
       <div>

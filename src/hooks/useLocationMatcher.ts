@@ -1,5 +1,6 @@
 import { useState } from "react";
-import type { PointOfInterest, BudgetType, TravelMode } from "../types/point";
+import type { BudgetType, TravelMode } from "../types/api";
+import type { ApiResponse, PointOfInterestDTO } from "../types/api";
 
 interface LocationMatchRequest {
   center?: {
@@ -9,18 +10,15 @@ interface LocationMatchRequest {
   value: number;
   budgetType: string;
   travelMode: string;
-  name?: string;
-}
-
-interface LocationMatchResponse {
-  [key: string]: unknown;
+  name: string | null;
 }
 
 interface UseLocationMatcherResult {
   isLoading: boolean;
   error: string | null;
-  data: LocationMatchResponse | null;
-  matchLocations: (pointsOfInterest: PointOfInterest[]) => Promise<void>;
+  matchLocations: (
+    pointsOfInterest: PointOfInterestDTO[]
+  ) => Promise<ApiResponse[] | void>;
 }
 
 const mapBudgetType = (budgetType: BudgetType): string => {
@@ -40,7 +38,6 @@ const mapTravelMode = (travelMode: TravelMode): string => {
 export const useLocationMatcher = (): UseLocationMatcherResult => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<LocationMatchResponse | null>(null);
 
   const getAuthToken = (): string | null => {
     try {
@@ -68,8 +65,8 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
   };
 
   const matchLocations = async (
-    pointsOfInterest: PointOfInterest[]
-  ): Promise<void> => {
+    pointsOfInterest: PointOfInterestDTO[]
+  ): Promise<ApiResponse[] | void> => {
     setIsLoading(true);
     setError(null);
 
@@ -82,18 +79,17 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
       const requestData: LocationMatchRequest[] = pointsOfInterest.map(
         (poi) => {
           const baseRequest: LocationMatchRequest = {
+            name: poi.name,
             value: poi.value,
             budgetType: mapBudgetType(poi.budgetType),
             travelMode: mapTravelMode(poi.travelMode),
           };
 
-          if (poi.point) {
+          if (poi.center) {
             baseRequest.center = {
-              latitude: poi.point.latitude,
-              longitude: poi.point.longitude,
+              latitude: poi.center.latitude,
+              longitude: poi.center.longitude,
             };
-          } else {
-            baseRequest.name = poi.name;
           }
 
           return baseRequest;
@@ -127,8 +123,7 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
       }
 
       const result = await response.json();
-      setData(result);
-      console.log("Odpowiedź z API:", result);
+      return result as ApiResponse[];
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Wystąpił nieznany błąd";
@@ -142,7 +137,6 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
   return {
     isLoading,
     error,
-    data,
     matchLocations,
   };
 };
