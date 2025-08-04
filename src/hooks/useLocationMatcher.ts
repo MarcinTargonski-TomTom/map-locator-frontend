@@ -109,7 +109,6 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
 
       const result = await response.json();
       return result as ApiResponse[];
-      console.log("Odpowiedź z API:", result);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Wystąpił nieznany błąd";
