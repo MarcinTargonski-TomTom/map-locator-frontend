@@ -46,7 +46,6 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
         map.setPaintProperty(fillId, "fill-opacity", hoverOpacity);
         map.setPaintProperty(outlineId, "line-width", hoverWidth);
       }
-      // map.moveLayer("response-region-fill"); //todo
     }
 
     function setDefaultStylesOnRegion(regionId: string | null) {
