@@ -86,7 +86,7 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
     };
   }, [map, regions, responseIndex]);
 
-  if (!map || !regions || regions.length === 0) return;
+  if (!map || !regions || regions.length === 0) return null;
 
   const { requestRegions, responseRegion } = regions[responseIndex];
 
