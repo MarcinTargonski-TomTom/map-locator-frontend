@@ -13,8 +13,8 @@ const SignUpPage = () => {
     login: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<{
     login?: string;
     email?: string;
@@ -28,19 +28,20 @@ const SignUpPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const result = signUpSchema.safeParse(fields);
+    const formData = { ...fields, confirmPassword };
+    const result = signUpSchema.safeParse(formData);
     setFormValid(result.success);
-  }, [fields]);
+  }, [fields, confirmPassword]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const { confirmPassword, ...payload } = fields;
+    const { ...payload } = fields;
     try {
       await signUp(payload);
       addToast("Registration successful!", "success");
       navigate("/sign-in");
-    } catch (err: any) {
-      addToast(err.message || "Registration failed", "danger");
+    } catch (err: Error | unknown) {
+      addToast((err as Error).message || "Registration failed", "danger");
     }
   };
 
@@ -60,7 +61,8 @@ const SignUpPage = () => {
               setFields((prev) => ({ ...prev, login: e.target.value }))
             }
             onBlur={() => {
-              const { login } = getSignUpErrors(fields);
+              const formData = { ...fields, confirmPassword };
+              const { login } = getSignUpErrors(formData);
               setErrors((prev) => ({ ...prev, login }));
             }}
             error={errors.login}
@@ -75,7 +77,8 @@ const SignUpPage = () => {
               setFields((prev) => ({ ...prev, email: e.target.value }))
             }
             onBlur={() => {
-              const { email } = getSignUpErrors(fields);
+              const formData = { ...fields, confirmPassword };
+              const { email } = getSignUpErrors(formData);
               setErrors((prev) => ({ ...prev, email }));
             }}
             error={errors.email}
@@ -90,7 +93,8 @@ const SignUpPage = () => {
               setFields((prev) => ({ ...prev, password: e.target.value }))
             }
             onBlur={() => {
-              const { password } = getSignUpErrors(fields);
+              const formData = { ...fields, confirmPassword };
+              const { password } = getSignUpErrors(formData);
               setErrors((prev) => ({ ...prev, password }));
             }}
             error={errors.password}
@@ -100,16 +104,16 @@ const SignUpPage = () => {
             id="confirmPassword"
             label="Confirm Password:"
             placeholder="Confirm your password"
-            value={fields.confirmPassword}
-            onChange={(e) =>
-              setFields((prev) => ({
-                ...prev,
-                confirmPassword: e.target.value,
-              }))
-            }
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             onBlur={() => {
-              const { confirmPassword } = getSignUpErrors(fields);
-              setErrors((prev) => ({ ...prev, confirmPassword }));
+              const formData = { ...fields, confirmPassword };
+              const { confirmPassword: confirmPasswordError } =
+                getSignUpErrors(formData);
+              setErrors((prev) => ({
+                ...prev,
+                confirmPassword: confirmPasswordError,
+              }));
             }}
             error={errors.confirmPassword}
           />
