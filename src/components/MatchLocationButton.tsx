@@ -1,4 +1,4 @@
-import { Button, tombac } from "tombac";
+import { Button, tombac, useToasts } from "tombac";
 import styled from "styled-components";
 import { useLocationMatcher } from "../hooks/useLocationMatcher";
 import { useContext } from "react";
@@ -12,20 +12,24 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
   const { pointsOfInterest, setRegions, setResponseIndex } =
     useContext(MapContext);
   const { isLoading, error, matchLocations } = useLocationMatcher();
+  const { addToast } = useToasts();
 
   const handleMatch = async () => {
     if (pointsOfInterest.length === 0) {
-      alert("Dodaj przynajmniej jeden punkt lub frazę wyszukiwania");
+      addToast(
+        "Dodaj przynajmniej jeden punkt lub frazę wyszukiwania",
+        "alert"
+      );
       return;
     }
 
     try {
       const newData = await matchLocations(pointsOfInterest);
       if (!newData) {
-        alert("Brak danych do wyświetlenia");
+        addToast("Brak danych do wyświetlenia", "danger");
         return;
       } else {
-        alert("Dopasowanie lokalizacji zakończone pomyślnie!");
+        addToast("Dopasowanie lokalizacji zakończone pomyślnie!", "success");
 
         setRegions(newData);
         setResponseIndex(0);
