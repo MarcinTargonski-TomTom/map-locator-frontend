@@ -15,11 +15,6 @@ function SearchPanel() {
   } = useContext(MapContext);
   const searchPhrases = pointsOfInterest.filter((poi) => poi.center === null);
 
-  const exportData = () => {
-    console.log("Dane do wysłania do API:", pointsOfInterest);
-    return pointsOfInterest;
-  };
-
   const removePointOfInterest = (index: number) => {
     setPointsOfInterest(pointsOfInterest.filter((_, i) => i !== index));
   };
@@ -108,9 +103,6 @@ function SearchPanel() {
           <StyledButton onClick={clearAllPoints} variant="secondary">
             Wyczyść wszystkie frazy
           </StyledButton>
-          <StyledButton onClick={exportData} variant="success">
-            Eksportuj do API
-          </StyledButton>
         </div>
       )}
     </Panel>
@@ -139,4 +131,5 @@ const StyledButton = styled(Button)`
   border-radius: ${tombac.unit(4)};
   padding: ${tombac.unit(6)} ${tombac.unit(10)};
   margin: ${tombac.unit(4)};
+  width: 100%;
 `;
