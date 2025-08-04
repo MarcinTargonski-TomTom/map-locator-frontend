@@ -43,13 +43,28 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
   const [data, setData] = useState<LocationMatchResponse | null>(null);
 
   const getAuthToken = (): string | null => {
-    return (
-      localStorage.getItem("authToken") ||
-      localStorage.getItem("token") ||
-      sessionStorage.getItem("authToken") ||
-      sessionStorage.getItem("token") ||
-      null
-    );
+    try {
+      const token =
+        localStorage.getItem("auth_token") ||
+        localStorage.getItem("token") ||
+        sessionStorage.getItem("auth_token") ||
+        sessionStorage.getItem("token");
+
+      if (!token) return null;
+
+      // Jeśli token zaczyna się i kończy cudzysłowami, to jest JSON string
+      if (token.startsWith('"') && token.endsWith('"')) {
+        try {
+          return JSON.parse(token);
+        } catch {
+          return token;
+        }
+      }
+      // W przeciwnym razie zwróć jak jest
+      return token;
+    } catch {
+      return null;
+    }
   };
 
   const matchLocations = async (
