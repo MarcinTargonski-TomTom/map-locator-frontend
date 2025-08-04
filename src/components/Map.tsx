@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   GlMap,
   MapMenuToggle,
@@ -14,15 +14,12 @@ import PointDetailsModal from "./MapPointDetailsModal";
 import AddPointFormModal from "./AddPointFormModal";
 import MapClickHandler from "./MapClickHandler";
 import MatchLocationButton from "./MatchLocationButton";
-import MyRegionDisplay from "./RegionDisplay";
-import { MapContext } from "../context/mapContext";
 import { type PointOfInterestDTO } from "../types/api";
 import SelectResponseForm from "./SelectResponseForm";
+import RegionDisplay from "./RegionDisplay";
 
 function Map() {
   const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
-
-  const { regions, responseIndex } = useContext(MapContext);
 
   const [showPointForm, setShowPointForm] = useState<{
     isVisible: boolean;
@@ -108,9 +105,7 @@ function Map() {
             onShowPointDetails={showPointDetailsModal}
           />
 
-          {regions != null && (
-            <MyRegionDisplay apiResponse={regions[responseIndex]} />
-          )}
+          <RegionDisplay />
         </GlMap>
 
         <SelectResponseForm />

@@ -1,20 +1,22 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { withMap } from "legoland-shared";
-import type { ApiResponse } from "../types/api";
 import { Region } from "./Region";
 import type { MapMouseEvent } from "mapbox-gl";
 import MyTooltip from "./Tooltip";
 import { MARKER_COLORS } from "../lib/markerColors";
+import { MapContext } from "../context/mapContext";
 
-interface HybridRegionsDisplayProps {
-  apiResponse: ApiResponse;
+interface RegionDisplayProps {
   map?: any;
 }
 
-const MyRegionDisplay = function HybridRegionsDisplay({
-  apiResponse: { requestRegions, responseRegion },
-  map,
-}: HybridRegionsDisplayProps) {
+const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
+  const { regions, responseIndex } = useContext(MapContext);
+
+  if (regions == null || regions.length === 0) return null;
+
+  const { requestRegions, responseRegion } = regions[responseIndex];
+
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const lastHovered = useRef<string | null>(null);
@@ -117,4 +119,4 @@ const MyRegionDisplay = function HybridRegionsDisplay({
   );
 };
 
-export default withMap(MyRegionDisplay as any);
+export default withMap(RegionDisplay as any);
