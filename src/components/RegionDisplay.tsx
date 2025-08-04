@@ -98,7 +98,7 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
         <Region
           region={responseRegion}
           regionId="response-region"
-          color="#FF0000" // czerwony
+          color="#de1c12"
         ></Region>
       )}
 

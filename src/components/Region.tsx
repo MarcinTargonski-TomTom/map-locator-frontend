@@ -26,7 +26,6 @@ export const Region = ({
         strokeWidth={strokeWidth}
         sourceId={regionId}
       />
-      {/* <Marker lng={region.center.longitude} lat={region.center.latitude} /> */}
     </div>
   );
 };

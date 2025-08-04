@@ -1,33 +1,43 @@
+import styled from "styled-components";
+import { tombac } from "tombac";
+
 interface TooltipProps {
   isVisible: boolean;
-  position: { x: number; y: number };
+  position: Position;
   text: string;
+}
+
+interface Position {
+  x: number;
+  y: number;
 }
 
 function Tooltip({ isVisible, position, text }: TooltipProps) {
   if (!isVisible) return null;
 
-  return (
-    <div
-      style={{
-        position: "fixed",
-        left: position.x + 10,
-        top: position.y - 20,
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-        color: "white",
-        padding: "8px 12px",
-        borderRadius: "4px",
-        fontSize: "12px",
-        pointerEvents: "none",
-        zIndex: 1000,
-        maxWidth: "200px",
-        wordWrap: "break-word",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.3)",
-      }}
-    >
-      <div>{text}</div>
-    </div>
-  );
+  return <StyledTooltip position={position}>{text}</StyledTooltip>;
 }
+
+const StyledTooltip = styled.div<{
+  position: Position;
+  children?: React.ReactNode;
+}>`
+  position: fixed;
+  left: ${({ position }) => position.x + 10}px;
+  top: ${({ position }) => position.y - 20}px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 1000;
+  max-width: 200px;
+  word-wrap: break-word;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  border: none;
+  border-radius: ${tombac.unit(4)};
+  padding: ${tombac.unit(6)} ${tombac.unit(10)};
+  margin: ${tombac.unit(4)};
+`;
 
 export default Tooltip;

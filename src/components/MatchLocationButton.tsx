@@ -46,12 +46,6 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
       </StyledButton>
 
       {error && <ErrorMessage>Błąd: {error}</ErrorMessage>}
-
-      {!error && (
-        <SuccessMessage>
-          Dopasowanie zakończone pomyślnie! Sprawdź konsolę dla szczegółów.
-        </SuccessMessage>
-      )}
     </ButtonContainer>
   );
 }

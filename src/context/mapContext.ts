@@ -15,9 +15,7 @@ export const MapContext = createContext<MapContextType>({
   regions: null,
   setRegions: () => {},
   pointsOfInterest: [],
-  setPointsOfInterest: () => {
-    console.warn("setPointsOfInterest not implemented");
-  },
+  setPointsOfInterest: () => {},
   responseIndex: 0,
   setResponseIndex: () => {},
   reset: () => {},
