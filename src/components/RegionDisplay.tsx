@@ -51,7 +51,6 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
     if (regionId === null) return;
     const prevFillId = `${regionId}-fill`;
     const prevOutlineId = `${regionId}-outline`;
-    console.log(regionId);
     const defaultOpacity = 0.2;
     const defaultWidth = 3;
 
