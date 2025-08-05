@@ -89,19 +89,21 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
   if (!map || !regions || regions.length === 0) return null;
 
   const { requestRegions, responseRegion } = regions[responseIndex];
-
   return (
     <>
-      {requestRegions.map(({ region }, index) => {
-        return (
-          <Region
-            color={MARKER_COLORS[index % MARKER_COLORS.length]}
-            key={`request-region-${index}`}
-            region={region}
-            regionId={`request-region-${index}`}
-          />
-        );
-      })}
+      {requestRegions
+        .filter((region) => region.pointOfInterest.isDisplayed)
+        .sort((a, b) => a.pointOfInterest.order - b.pointOfInterest.order)
+        .map(({ region }, index) => {
+          return (
+            <Region
+              color={MARKER_COLORS[index % MARKER_COLORS.length]}
+              key={`request-region-${index}`}
+              region={region}
+              regionId={`request-region-${index}`}
+            />
+          );
+        })}
 
       {responseRegion.center && (
         <Region

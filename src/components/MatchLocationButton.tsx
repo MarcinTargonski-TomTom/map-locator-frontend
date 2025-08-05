@@ -31,7 +31,19 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
       } else {
         addToast("Dopasowanie lokalizacji zakończone pomyślnie!", "success");
 
-        setRegions(newData);
+        setRegions(
+          newData.map((region) => ({
+            ...region,
+            requestRegions: region.requestRegions.map((reqRegion, index) => ({
+              ...reqRegion,
+              pointOfInterest: {
+                ...reqRegion.pointOfInterest,
+                isDisplayed: true,
+                order: index,
+              },
+            })),
+          }))
+        );
         setResponseIndex(0);
       }
     } catch (err) {

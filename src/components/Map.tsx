@@ -8,8 +8,7 @@ import {
 import "mapbox-gl/dist/mapbox-gl.css";
 import "tombac-icons/react/style.css";
 import styled from "styled-components";
-import InfoPanel from "./InfoPanel";
-import SearchPanel from "./SearchPanel";
+import TabbedPanel from "./TabbedPanel";
 import PointDetailsModal from "./MapPointDetailsModal";
 import AddPointFormModal from "./AddPointFormModal";
 import MapClickHandler from "./MapClickHandler";
@@ -61,8 +60,7 @@ function Map() {
   return (
     <>
       <MapDiv>
-        <InfoPanel />
-        <SearchPanel />
+        <TabbedPanel />
 
         <GlMap
           mapStyleSettings={mapStyleSettings}
@@ -71,7 +69,11 @@ function Map() {
           }
           mapModel={mapModel}
           apiKey={apiKey}
-          createMapOptions={{ center: [0, 0], zoom: 1 }}
+          //centered at lodz
+          createMapOptions={{
+            center: [19.51898192980059, 51.7373403170032],
+            zoom: 10,
+          }}
           hideNavigationControls={false}
           controlLocation="top-right"
           mapControlsProps={{

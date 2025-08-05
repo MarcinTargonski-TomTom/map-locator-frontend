@@ -9,6 +9,8 @@ export interface Region {
 }
 
 export interface PointOfInterestDTO {
+  isDisplayed: boolean;
+  order: number;
   name: string | null;
   center: PointDTO | null;
   value: number;
