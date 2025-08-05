@@ -12,6 +12,7 @@ interface RegionDisplayProps {
 
 const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
   const { regions, responseIndex } = useContext(MapContext);
+
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const lastHovered = useRef<string | null>(null);
@@ -85,7 +86,8 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
     };
   }, [map, regions, responseIndex]);
 
-  if (regions === null || regions.length === 0) return null;
+  if (!map || !regions || regions.length === 0) return null;
+
   const { requestRegions, responseRegion } = regions[responseIndex];
 
   return (

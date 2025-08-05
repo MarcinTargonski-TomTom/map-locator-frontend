@@ -8,11 +8,8 @@ import { TRAVEL_MODE_OPTIONS, type PointOfInterestDTO } from "../types/api";
 import { BUDGET_OPTIONS } from "../types/api";
 
 function SearchPanel() {
-  const {
-    setPointsOfInterest,
-    pointsOfInterest,
-    reset: clearAllPoints,
-  } = useContext(MapContext);
+  const { setPointsOfInterest, pointsOfInterest, removePhrases } =
+    useContext(MapContext);
   const searchPhrases = pointsOfInterest.filter((poi) => poi.center === null);
 
   const removePointOfInterest = (index: number) => {
@@ -100,7 +97,7 @@ function SearchPanel() {
               </Button>
             </div>
           ))}
-          <StyledButton onClick={clearAllPoints} variant="secondary">
+          <StyledButton onClick={removePhrases} variant="secondary">
             Wyczyść wszystkie frazy
           </StyledButton>
         </div>

@@ -9,6 +9,7 @@ export type MapContextType = {
   responseIndex: number;
   setResponseIndex: (index: number) => void;
   reset: () => void;
+  removePhrases: () => void;
 };
 
 export const MapContext = createContext<MapContextType>({
@@ -19,4 +20,5 @@ export const MapContext = createContext<MapContextType>({
   responseIndex: 0,
   setResponseIndex: () => {},
   reset: () => {},
+  removePhrases: () => {},
 });

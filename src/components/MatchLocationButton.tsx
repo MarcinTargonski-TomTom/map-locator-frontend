@@ -9,7 +9,8 @@ interface MatchLocationButtonProps {
 }
 
 function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
-  const { pointsOfInterest, setRegions } = useContext(MapContext);
+  const { pointsOfInterest, setRegions, setResponseIndex } =
+    useContext(MapContext);
   const { isLoading, error, matchLocations } = useLocationMatcher();
   const { addToast } = useToasts();
 
@@ -31,6 +32,7 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
         addToast("Dopasowanie lokalizacji zakończone pomyślnie!", "success");
 
         setRegions(newData);
+        setResponseIndex(0);
       }
     } catch (err) {
       // Error już jest obsłużony w hooku
