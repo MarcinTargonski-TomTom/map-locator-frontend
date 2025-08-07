@@ -3,19 +3,18 @@ import { Button, VGrid, tombac, Heading, useToasts } from "tombac";
 import styled from "styled-components";
 import { useSignIn } from "../hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
-import { useToken } from "../hooks/useToken";
 import type { Credentials, Tokens } from "../types/signIn";
 import { isSignInSchemaValid, getSignInErrors } from "../schemas/userSchemas";
 import { FormTextFieldEntry } from "../components/FormTextFieldEntry";
 import { FormPasswordFieldEntry } from "../components/FormPasswordFieldEntry";
-import { TokenType } from "../types/token";
 import { MAP_PATH } from "../const/routes";
+import { useSessionContext } from "../context/sessionContext";
 
 const SignInPage = () => {
   const { signIn } = useSignIn();
   const { addToast } = useToasts();
   const navigate = useNavigate();
-  const [, setToken] = useToken();
+  const { signIn: setRoleFromToken } = useSessionContext();
 
   const [credentials, setCredentials] = useState<Credentials>({
     login: "",
@@ -35,7 +34,7 @@ const SignInPage = () => {
     try {
       const tokens: Tokens = await signIn(credentials);
       addToast("Sign in successful!", "success");
-      setToken(tokens.auth, TokenType.AUTH);
+      setRoleFromToken(tokens.auth);
       navigate(MAP_PATH);
     } catch (err: Error | unknown) {
       addToast((err as Error).message || "Sign in failed", "danger");
