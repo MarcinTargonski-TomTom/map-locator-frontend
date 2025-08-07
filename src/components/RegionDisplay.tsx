@@ -104,12 +104,14 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
     return () => {
       map.off("mousemove", handleMapMouseMove);
     };
-  }, [regions]);
+  }, [map, responseIndex, regions]);
 
   useEffect(() => {
     if (!regions || regions.length < 1) {
       return;
     }
+    const { requestRegions, responseRegion } = regions[responseIndex];
+
     const displayedRegions = requestRegions
       .map((reqRegion, originalIndex) => {
         if (!reqRegion.pointOfInterest.isDisplayed) return null;
@@ -138,7 +140,7 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
       map?.moveLayer("response-region-fill");
       map?.moveLayer("response-region-outline");
     }
-  }, [regions, pointsOfInterest]);
+  }, [map, regions, pointsOfInterest]);
 
   if (!map || !regions || regions.length === 0) return null;
 
