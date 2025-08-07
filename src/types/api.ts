@@ -27,7 +27,6 @@ export interface ApiResponse {
 export type TravelMode = "CAR" | "PEDESTRIAN" | "BUS";
 export const TRAVEL_MODE_OPTIONS = [
   { value: "CAR" as TravelMode, label: "Samochód" },
-  { value: "PEDESTRIAN" as TravelMode, label: "Pieszy" },
   { value: "BUS" as TravelMode, label: "Autobus" },
 ];
 
