@@ -2,10 +2,10 @@ import { useContext } from "react";
 import { Button, tombac } from "tombac";
 import styled from "styled-components";
 import { MapContext } from "../context/mapContext";
-import { MARKER_COLORS } from "../lib/markerColors";
 import SearchForm from "./SearchForm";
 import type { BudgetType, TravelMode, PointOfInterestDTO } from "../types/api";
 import { TRAVEL_MODE_OPTIONS, BUDGET_OPTIONS } from "../types/api";
+import { getNextAvailableColor } from "../utils/colorUtils";
 
 function SearchTab() {
   const {
@@ -36,6 +36,7 @@ function SearchTab() {
       value: budget,
       budgetType,
       travelMode,
+      color: getNextAvailableColor(pointsOfInterest),
     };
     setPointsOfInterest([...pointsOfInterest, newPoi]);
   };
@@ -75,7 +76,7 @@ function SearchTab() {
               }}
             >
               {mapPoints.map((poi, index) => {
-                const color = MARKER_COLORS[index % MARKER_COLORS.length];
+                const color = poi.color;
                 return (
                   <div
                     key={index}

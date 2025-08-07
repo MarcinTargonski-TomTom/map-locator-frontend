@@ -3,7 +3,6 @@ import { useContext, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import { MapContext } from "../context/mapContext";
 import type { PointOfInterestDTO } from "../types/api";
-import { MARKER_COLORS } from "../lib/markerColors";
 
 function MapClickHandler({
   onAddMapPoint,
@@ -40,7 +39,7 @@ function MapClickHandler({
     const existingMarkers = document.querySelectorAll(".custom-marker");
     existingMarkers.forEach((marker) => marker.remove());
 
-    mapPoints.forEach((poi, index) => {
+    mapPoints.forEach((poi) => {
       if (!poi.center) return;
 
       const el = document.createElement("div");
@@ -52,7 +51,7 @@ function MapClickHandler({
         4
       )}, ${poi.center.latitude.toFixed(4)})`;
 
-      const color = MARKER_COLORS[index % MARKER_COLORS.length];
+      const color = poi.color;
 
       el.innerHTML = `
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

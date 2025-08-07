@@ -3,7 +3,6 @@ import { withMap } from "legoland-shared";
 import { Region } from "./Region";
 import type { MapMouseEvent, Map } from "mapbox-gl";
 import MyTooltip from "./Tooltip";
-import { MARKER_COLORS } from "../lib/markerColors";
 import { MapContext } from "../context/mapContext";
 
 interface RegionDisplayProps {
@@ -11,7 +10,7 @@ interface RegionDisplayProps {
 }
 
 const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
-  const { regions, responseIndex } = useContext(MapContext);
+  const { regions, responseIndex, pointsOfInterest } = useContext(MapContext);
 
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -27,7 +26,13 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
 
       const features = map.queryRenderedFeatures(e.point, {
         layers: [
-          ...requestRegions.map((_, index) => `request-region-${index}-fill`),
+          ...requestRegions
+            .map((region, index) =>
+              region.pointOfInterest.isDisplayed
+                ? `request-region-${index}-fill`
+                : null
+            )
+            .filter((layerId): layerId is string => layerId !== null),
           ...(responseRegion.center !== null ? ["response-region-fill"] : []),
         ],
       });
@@ -65,14 +70,29 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
 
       const newHovered = getHoveredRegionId(e);
       if (newHovered !== lastHovered.current) {
-        if (newHovered) {
-          setStylesOnHoveredRegion(newHovered);
+        if (lastHovered.current) {
+          setDefaultStylesOnRegion(lastHovered.current);
+        }
 
-          map.getCanvas().style.cursor = "pointer";
+        if (newHovered) {
+          const regionIndex = newHovered.startsWith("request-region-")
+            ? parseInt(newHovered.split("-")[2], 10)
+            : -1;
+
+          const isDisplayed =
+            regionIndex === -1 ||
+            (requestRegions[regionIndex] &&
+              requestRegions[regionIndex].pointOfInterest.isDisplayed);
+
+          if (isDisplayed) {
+            setStylesOnHoveredRegion(newHovered);
+            map.getCanvas().style.cursor = "pointer";
+          } else {
+            map.getCanvas().style.cursor = "";
+          }
         } else {
           map.getCanvas().style.cursor = "";
         }
-        setDefaultStylesOnRegion(lastHovered.current);
 
         lastHovered.current = newHovered;
         setHoveredRegion(newHovered);
@@ -84,7 +104,41 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
     return () => {
       map.off("mousemove", handleMapMouseMove);
     };
-  }, [map, regions, responseIndex]);
+  }, [regions]);
+
+  useEffect(() => {
+    if (!regions || regions.length < 1) {
+      return;
+    }
+    const displayedRegions = requestRegions
+      .map((reqRegion, originalIndex) => {
+        if (!reqRegion.pointOfInterest.isDisplayed) return null;
+        return {
+          ...reqRegion,
+          originalIndex,
+        };
+      })
+      .filter((e) => e !== null);
+
+    if (displayedRegions.length < 1) return;
+
+    displayedRegions
+      .sort((a, b) => b.pointOfInterest.order - a.pointOfInterest.order)
+      .filter(
+        (
+          item
+        ): item is (typeof requestRegions)[0] & { originalIndex: number } =>
+          item !== null
+      )
+      .forEach(({ originalIndex }) => {
+        map?.moveLayer(`request-region-${originalIndex}-fill`);
+        map?.moveLayer(`request-region-${originalIndex}-outline`);
+      });
+    if (responseRegion.center) {
+      map?.moveLayer("response-region-fill");
+      map?.moveLayer("response-region-outline");
+    }
+  }, [regions, pointsOfInterest]);
 
   if (!map || !regions || regions.length === 0) return null;
 
@@ -92,15 +146,27 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
   return (
     <>
       {requestRegions
-        .filter((region) => region.pointOfInterest.isDisplayed)
-        .sort((a, b) => a.pointOfInterest.order - b.pointOfInterest.order)
-        .map(({ region }, index) => {
+        .map((reqRegion, originalIndex) => {
+          if (!reqRegion.pointOfInterest.isDisplayed) return null;
+          return {
+            ...reqRegion,
+            originalIndex,
+          };
+        })
+        .filter(
+          (
+            item
+          ): item is (typeof requestRegions)[0] & { originalIndex: number } =>
+            item !== null
+        )
+        .sort((a, b) => b.pointOfInterest.order - a.pointOfInterest.order)
+        .map(({ region, originalIndex, pointOfInterest }) => {
           return (
             <Region
-              color={MARKER_COLORS[index % MARKER_COLORS.length]}
-              key={`request-region-${index}`}
+              color={pointOfInterest.color}
+              key={`request-region-${originalIndex}`}
               region={region}
-              regionId={`request-region-${index}`}
+              regionId={`request-region-${originalIndex}`}
             />
           );
         })}

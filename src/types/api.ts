@@ -16,6 +16,7 @@ export interface PointOfInterestDTO {
   value: number;
   budgetType: BudgetType;
   travelMode: TravelMode;
+  color: string;
 }
 
 export interface ApiResponse {

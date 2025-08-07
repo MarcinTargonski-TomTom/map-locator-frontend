@@ -11,13 +11,15 @@ function ResponsesTab() {
         onClick={() => setResponseIndex(index)}
         style={{
           cursor: "pointer",
-          marginBottom: "10px",
-          background: index === responseIndex ? "#ffcccc" : "#FFFFFF",
+          marginBottom: "2px",
+          padding: "3px",
+          borderRadius: "5px",
+          boxShadow: "0 0 5px rgba(0,0,0,0.1)",
+          border: index === responseIndex ? "2px solid #de1c12" : "none",
+          background: index === responseIndex ? "#ff7875" : "#FFFFFF",
         }}
       >
         <h3>Region {index + 1}</h3>
-        <p>{region.responseRegion.center?.latitude}</p>
-        <p>{region.responseRegion.center?.longitude}</p>
         <ul>
           {region.requestRegions.map((reqRegion, reqIndex) => (
             <li key={reqIndex}>{reqRegion.pointOfInterest.name}</li>
