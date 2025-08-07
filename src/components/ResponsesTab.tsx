@@ -19,7 +19,7 @@ function ResponsesTab() {
           background: index === responseIndex ? "#ff7875" : "#FFFFFF",
         }}
       >
-        <h3>Region {index + 1}</h3>
+        <h3>{region.name}</h3>
         <ul>
           {region.requestRegions.map((reqRegion, reqIndex) => (
             <li key={reqIndex}>{reqRegion.pointOfInterest.name}</li>

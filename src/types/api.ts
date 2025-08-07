@@ -20,7 +20,11 @@ export interface PointOfInterestDTO {
 }
 
 export interface ApiResponse {
-  requestRegions: { pointOfInterest: PointOfInterestDTO; region: Region }[];
+  name: string;
+  requestRegions: {
+    pointOfInterest: PointOfInterestDTO;
+    region: Region;
+  }[];
   responseRegion: Region;
 }
 
