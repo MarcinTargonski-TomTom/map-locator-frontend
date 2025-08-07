@@ -9,7 +9,7 @@ import { isSignInSchemaValid, getSignInErrors } from "../schemas/userSchemas";
 import { FormTextFieldEntry } from "../components/FormTextFieldEntry";
 import { FormPasswordFieldEntry } from "../components/FormPasswordFieldEntry";
 import { TokenType } from "../types/token";
-import { MAP_PATH } from "../components/Navbar";
+import { MAP_PATH } from "../const/routes";
 
 const SignInPage = () => {
   const { signIn } = useSignIn();

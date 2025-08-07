@@ -8,8 +8,8 @@ import {
 } from "react";
 import { TokenType, type Role, type TokenData } from "../types/token";
 import { useNavigate } from "react-router-dom";
-import { SIGN_IN_PATH } from "../components/Navbar";
 import { useToken } from "../hooks/useToken";
+import { SIGN_IN_PATH } from "../const/routes";
 
 type SessionContextProps = {
   role: Role | null;

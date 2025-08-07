@@ -8,11 +8,12 @@ import {
 } from "tombac";
 import { Link } from "react-router";
 import { useSessionContext } from "../context/sessionContext";
-
-export const ROOT_PATH = "/";
-export const MAP_PATH = "/map";
-export const SIGN_IN_PATH = "/sign-in";
-export const SIGN_UP_PATH = "/sign-up";
+import {
+  MAP_PATH,
+  ROOT_PATH,
+  SIGN_IN_PATH,
+  SIGN_UP_PATH,
+} from "../const/routes";
 
 export function AppNavbar() {
   const { role, logOut } = useSessionContext();

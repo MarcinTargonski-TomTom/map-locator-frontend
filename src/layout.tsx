@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import { AppNavbar } from "./components/Navbar.tsx";
 import MapPage from "./pages/MapPage.tsx";
 import PageNotFound from "./pages/PageNotFound.tsx";
@@ -6,6 +6,7 @@ import { ToastsProvider, TombacApp } from "tombac";
 import SignInPage from "./pages/SignInPage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import { SessionProvider } from "./context/sessionContext.tsx";
+import { MAP_PATH, SIGN_IN_PATH, SIGN_UP_PATH } from "./const/routes.ts";
 
 const Layout = () => {
   return (
@@ -15,9 +16,13 @@ const Layout = () => {
           <SessionProvider>
             <AppNavbar />
             <Routes>
-              <Route path="/map" element={<MapPage />} />
-              <Route path="/sign-in" element={<SignInPage />} />
-              <Route path="/sign-up" element={<SignUpPage />} />
+              <Route
+                path="/"
+                element={<Navigate replace to={SIGN_IN_PATH} />}
+              />
+              <Route path={MAP_PATH} element={<MapPage />} />
+              <Route path={SIGN_IN_PATH} element={<SignInPage />} />
+              <Route path={SIGN_UP_PATH} element={<SignUpPage />} />
               <Route path="/*" element={<PageNotFound />} />
             </Routes>
           </SessionProvider>

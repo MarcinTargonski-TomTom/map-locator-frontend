@@ -1,6 +1,8 @@
 import { useState } from "react";
 import type { BudgetType, TravelMode } from "../types/api";
 import type { ApiResponse, PointOfInterestDTO } from "../types/api";
+import { useToken } from "./useToken";
+import { TokenType } from "../types/token";
 
 interface LocationMatchRequest {
   center?: {
@@ -38,14 +40,11 @@ const mapTravelMode = (travelMode: TravelMode): string => {
 export const useLocationMatcher = (): UseLocationMatcherResult => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [getStoredToken] = useToken();
 
   const getAuthToken = (): string | null => {
     try {
-      const token =
-        localStorage.getItem("auth_token") ||
-        localStorage.getItem("token") ||
-        sessionStorage.getItem("auth_token") ||
-        sessionStorage.getItem("token");
+      const token = getStoredToken(TokenType.AUTH);
 
       if (!token) return null;
 
