@@ -15,6 +15,7 @@ import styled from "styled-components";
 import { BUDGET_OPTIONS } from "../types/api";
 import { TRAVEL_MODE_OPTIONS, type PointOfInterestDTO } from "../types/api";
 import { MapContext } from "../context/mapContext";
+import { getNextAvailableColor } from "../utils/colorUtils";
 
 function AddPointFormModal({
   longitude,
@@ -53,6 +54,9 @@ function AddPointFormModal({
       value,
       budgetType,
       travelMode,
+      isDisplayed: true,
+      order: pointsOfInterest.length + 1,
+      color: getNextAvailableColor(pointsOfInterest),
     };
     setPointsOfInterest([...pointsOfInterest, newPoi]);
     onClose();

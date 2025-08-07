@@ -9,11 +9,14 @@ export interface Region {
 }
 
 export interface PointOfInterestDTO {
+  isDisplayed: boolean;
+  order: number;
   name: string | null;
   center: PointDTO | null;
   value: number;
   budgetType: BudgetType;
   travelMode: TravelMode;
+  color: string;
 }
 
 export interface ApiResponse {

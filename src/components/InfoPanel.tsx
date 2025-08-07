@@ -1,5 +1,4 @@
 import { Box, Button } from "tombac";
-import { MARKER_COLORS } from "../lib/markerColors";
 import styled from "styled-components";
 import { MapContext } from "../context/mapContext";
 import { useContext } from "react";
@@ -44,7 +43,7 @@ function InfoPanel() {
             }}
           >
             {mapPoints.map((poi, index) => {
-              const color = MARKER_COLORS[index % MARKER_COLORS.length];
+              const color = poi.color;
               return (
                 <div
                   key={index}

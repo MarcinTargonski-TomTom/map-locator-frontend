@@ -23,6 +23,9 @@ function SearchPanel() {
     travelMode: TravelMode
   ) => {
     const newPoi: PointOfInterestDTO = {
+      isDisplayed: false,
+      order: 0,
+      color: "#000",
       name: text,
       center: null,
       value: budget,

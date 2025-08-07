@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useLocationMatcher } from "../hooks/useLocationMatcher";
 import { useContext } from "react";
 import { MapContext } from "../context/mapContext";
+import { processApiResponses } from "../utils/apiUtils";
 
 interface MatchLocationButtonProps {
   disabled?: boolean;
@@ -31,7 +32,20 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
       } else {
         addToast("Dopasowanie lokalizacji zakończone pomyślnie!", "success");
 
-        setRegions(newData);
+        const processedData = processApiResponses(newData);
+        setRegions(
+          processedData.map((region) => ({
+            ...region,
+            requestRegions: region.requestRegions.map((reqRegion, index) => ({
+              ...reqRegion,
+              pointOfInterest: {
+                ...reqRegion.pointOfInterest,
+                isDisplayed: true,
+                order: index,
+              },
+            })),
+          }))
+        );
         setResponseIndex(0);
       }
     } catch (err) {

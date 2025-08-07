@@ -8,8 +8,7 @@ import {
 import "mapbox-gl/dist/mapbox-gl.css";
 import "tombac-icons/react/style.css";
 import styled from "styled-components";
-import InfoPanel from "./InfoPanel";
-import SearchPanel from "./SearchPanel";
+import TabbedPanel from "./TabbedPanel";
 import PointDetailsModal from "./MapPointDetailsModal";
 import AddPointFormModal from "./AddPointFormModal";
 import MapClickHandler from "./MapClickHandler";
@@ -20,6 +19,8 @@ import RegionDisplay from "./RegionDisplay";
 
 function Map() {
   const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
+
+  const [showTabbedPanel, setShowTabbedPanel] = useState(true);
 
   const [showPointForm, setShowPointForm] = useState<{
     isVisible: boolean;
@@ -61,8 +62,47 @@ function Map() {
   return (
     <>
       <MapDiv>
-        <InfoPanel />
-        <SearchPanel />
+        {showTabbedPanel && (
+          <TabbedPanel onToggleVisibility={() => setShowTabbedPanel(false)} />
+        )}
+
+        {!showTabbedPanel && (
+          <button
+            onClick={() => setShowTabbedPanel(true)}
+            style={{
+              position: "absolute",
+              top: "20px",
+              left: "20px",
+              background: "white",
+              border: "1px solid #e0e0e0",
+              borderRadius: "4px",
+              width: "32px",
+              height: "32px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "14px",
+              color: "#666",
+              zIndex: 1001,
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#f0f0f0";
+              e.currentTarget.style.color = "#007acc";
+              e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.15)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "white";
+              e.currentTarget.style.color = "#666";
+              e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
+            }}
+            title="Show panel"
+          >
+            ▶
+          </button>
+        )}
 
         <GlMap
           mapStyleSettings={mapStyleSettings}
@@ -71,7 +111,11 @@ function Map() {
           }
           mapModel={mapModel}
           apiKey={apiKey}
-          createMapOptions={{ center: [0, 0], zoom: 1 }}
+          //centered at lodz
+          createMapOptions={{
+            center: [19.51898192980059, 51.7373403170032],
+            zoom: 10,
+          }}
           hideNavigationControls={false}
           controlLocation="top-right"
           mapControlsProps={{
