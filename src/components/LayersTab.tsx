@@ -51,7 +51,6 @@ function LayersTab() {
         const [movedRegion] = newRequestRegions.splice(sourceIndex, 1);
         newRequestRegions.splice(targetIndex, 0, movedRegion);
 
-        // Update order for all regions
         const updatedRegions = newRequestRegions.map((rr, idx) => ({
           ...rr,
           pointOfInterest: {

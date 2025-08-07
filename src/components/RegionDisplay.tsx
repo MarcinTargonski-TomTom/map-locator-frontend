@@ -140,7 +140,7 @@ const RegionDisplay = function RegionDisplay({ map }: RegionDisplayProps) {
       map?.moveLayer("response-region-fill");
       map?.moveLayer("response-region-outline");
     }
-  }, [map, regions, pointsOfInterest]);
+  }, [map, regions, pointsOfInterest, responseIndex]);
 
   if (!map || !regions || regions.length === 0) return null;
 

@@ -154,7 +154,6 @@ function Map() {
 
         <SelectResponseForm />
 
-        {/* Przycisk dopasowywania lokalizacji */}
         <MatchLocationButton />
 
         {showPointForm && (
