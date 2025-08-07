@@ -8,12 +8,14 @@ import type { Credentials, Tokens } from "../types/signIn";
 import { isSignInSchemaValid, getSignInErrors } from "../schemas/userSchemas";
 import { FormTextFieldEntry } from "../components/FormTextFieldEntry";
 import { FormPasswordFieldEntry } from "../components/FormPasswordFieldEntry";
+import { TokenType } from "../types/token";
+import { MAP_PATH } from "../components/Navbar";
 
 const SignInPage = () => {
   const { signIn } = useSignIn();
   const { addToast } = useToasts();
   const navigate = useNavigate();
-  const [, setTokens] = useToken();
+  const [, setToken] = useToken();
 
   const [credentials, setCredentials] = useState<Credentials>({
     login: "",
@@ -33,8 +35,8 @@ const SignInPage = () => {
     try {
       const tokens: Tokens = await signIn(credentials);
       addToast("Sign in successful!", "success");
-      setTokens(tokens.auth);
-      navigate("/map");
+      setToken(tokens.auth, TokenType.AUTH);
+      navigate(MAP_PATH);
     } catch (err: Error | unknown) {
       addToast((err as Error).message || "Sign in failed", "danger");
     }

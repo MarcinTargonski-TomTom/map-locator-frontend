@@ -5,19 +5,22 @@ import PageNotFound from "./pages/PageNotFound.tsx";
 import { ToastsProvider, TombacApp } from "tombac";
 import SignInPage from "./pages/SignInPage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
+import { SessionProvider } from "./context/sessionContext.tsx";
 
 const Layout = () => {
   return (
     <div className="min-h-screen flex flex-col relative">
       <TombacApp>
         <ToastsProvider zIndex={10}>
-          <AppNavbar />
-          <Routes>
-            <Route path="/map" element={<MapPage />} />
-            <Route path="/sign-in" element={<SignInPage />} />
-            <Route path="/sign-up" element={<SignUpPage />} />
-            <Route path="/*" element={<PageNotFound />} />
-          </Routes>
+          <SessionProvider>
+            <AppNavbar />
+            <Routes>
+              <Route path="/map" element={<MapPage />} />
+              <Route path="/sign-in" element={<SignInPage />} />
+              <Route path="/sign-up" element={<SignUpPage />} />
+              <Route path="/*" element={<PageNotFound />} />
+            </Routes>
+          </SessionProvider>
         </ToastsProvider>
       </TombacApp>
     </div>
