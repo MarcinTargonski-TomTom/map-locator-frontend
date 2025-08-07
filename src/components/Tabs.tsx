@@ -9,9 +9,16 @@ interface TabsProps {
     label: string;
   }>;
   children: ReactNode;
+  onToggleVisibility?: () => void;
 }
 
-function Tabs({ activeTab, onTabChange, tabs, children }: TabsProps) {
+function Tabs({
+  activeTab,
+  onTabChange,
+  tabs,
+  children,
+  onToggleVisibility,
+}: TabsProps) {
   return (
     <>
       <TabBar>
@@ -25,6 +32,16 @@ function Tabs({ activeTab, onTabChange, tabs, children }: TabsProps) {
             {tab.label}
           </button>
         ))}
+        {onToggleVisibility && (
+          <button
+            className="toggle-button"
+            onClick={onToggleVisibility}
+            type="button"
+            title="Hide panel"
+          >
+            ◀
+          </button>
+        )}
       </TabBar>
       <TabContent>{children}</TabContent>
     </>
@@ -59,7 +76,7 @@ const TabBar = styled.div`
       border-radius: 8px 0 0 0;
     }
 
-    &:last-child {
+    &:last-child:not(.toggle-button) {
       border-radius: 0 8px 0 0;
     }
 
@@ -72,6 +89,26 @@ const TabBar = styled.div`
       &:hover {
         background: white;
       }
+    }
+  }
+
+  .toggle-button {
+    flex: 0 0 auto;
+    width: 40px;
+    padding: 12px 8px;
+    border: none;
+    background: transparent;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: normal;
+    color: #666;
+    transition: all 0.2s ease;
+    border-radius: 0 8px 0 0;
+
+    &:hover {
+      background: #f0f0f0;
+      color: #007acc;
     }
   }
 `;

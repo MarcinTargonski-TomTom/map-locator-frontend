@@ -8,7 +8,11 @@ import LayersTab from "./LayersTab";
 
 type TabType = "search" | "responses" | "layers";
 
-function TabbedPanel() {
+interface TabbedPanelProps {
+  onToggleVisibility?: () => void;
+}
+
+function TabbedPanel({ onToggleVisibility }: TabbedPanelProps) {
   const [activeTab, setActiveTab] = useState<TabType>("search");
 
   const renderTabContent = () => {
@@ -36,6 +40,7 @@ function TabbedPanel() {
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab as TabType)}
         tabs={tabs}
+        onToggleVisibility={onToggleVisibility}
       >
         {renderTabContent()}
       </Tabs>
