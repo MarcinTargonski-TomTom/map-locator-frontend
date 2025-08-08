@@ -1,7 +1,7 @@
-import { Button, tombac, useToasts } from "tombac";
+import { Button, tombac, useToasts, Select } from "tombac";
 import styled from "styled-components";
 import { useLocationMatcher } from "../hooks/useLocationMatcher";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { MapContext } from "../context/mapContext";
 import { processApiResponses } from "../utils/apiUtils";
 
@@ -15,6 +15,14 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
   const { isLoading, error, matchLocations } = useLocationMatcher();
   const { addToast } = useToasts();
 
+  const smoothingOptions = [
+    { value: "CONVEX_HULL", label: "Wypukła otoczka" },
+    { value: "NONE", label: "Brak wygładzania" },
+    { value: "ENVELOPE", label: "Prostokątna koperta" },
+  ];
+
+  const [smoothingMethod, setSmoothingMethod] = useState(smoothingOptions[0]);
+
   const handleMatch = async () => {
     if (pointsOfInterest.length === 0) {
       addToast(
@@ -25,7 +33,10 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
     }
 
     try {
-      const newData = await matchLocations(pointsOfInterest);
+      const newData = await matchLocations(
+        pointsOfInterest,
+        smoothingMethod.value as "NONE" | "CONVEX_HULL" | "ENVELOPE"
+      );
       if (!newData || newData.length == 0) {
         addToast("Brak danych do wyświetlenia", "danger");
         return;
@@ -56,14 +67,32 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
 
   return (
     <ButtonContainer>
-      <StyledButton
-        variant="primary"
-        onClick={handleMatch}
-        disabled={disabled || isLoading || pointsOfInterest.length === 0}
-        $loading={isLoading}
-      >
-        {isLoading ? "Dopasowywanie..." : "Dopasuj lokalizacje"}
-      </StyledButton>
+      <ButtonWithSelect>
+        <StyledSelect
+          name="smoothingMethod"
+          value={smoothingMethod}
+          onChange={(selectedOption) => {
+            if (selectedOption && !Array.isArray(selectedOption)) {
+              setSmoothingMethod(
+                selectedOption as { value: string; label: string }
+              );
+            }
+          }}
+          options={smoothingOptions}
+          placeholder="Metoda"
+          menuPlacement="top"
+          isSearchable={false}
+        />
+
+        <StyledButton
+          variant="primary"
+          onClick={handleMatch}
+          disabled={disabled || isLoading || pointsOfInterest.length === 0}
+          $loading={isLoading}
+        >
+          {isLoading ? "Dopasowywanie..." : "Dopasuj lokalizacje"}
+        </StyledButton>
+      </ButtonWithSelect>
 
       {error && <ErrorMessage>Błąd: {error}</ErrorMessage>}
     </ButtonContainer>
@@ -84,18 +113,48 @@ const ButtonContainer = styled.div`
   gap: ${tombac.unit(8)};
 `;
 
+const ButtonWithSelect = styled.div`
+  display: flex;
+  background-color: ${tombac.color("primary", 600)};
+  border-radius: ${tombac.unit(8)};
+  box-shadow: 0 ${tombac.unit(4)} ${tombac.unit(12)} rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 ${tombac.unit(6)} ${tombac.unit(16)} rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const StyledSelect = styled(Select)`
+  min-width: ${tombac.unit(200)};
+  border-radius: ${tombac.unit(8)} 0 0 ${tombac.unit(8)};
+  z-index: 1001;
+
+  & > div {
+    border: none;
+    border-radius: ${tombac.unit(8)} 0 0 ${tombac.unit(8)};
+    color: white;
+    font-size: ${tombac.unit(14)};
+    font-weight: bold;
+  }
+
+  /* Ensure dropdown menu has proper z-index */
+  .react-select__menu {
+    z-index: 1002 !important;
+  }
+`;
+
 const StyledButton = styled(Button)<{ $loading?: boolean }>`
   padding: ${tombac.space(1.5)} ${tombac.space(3)};
-  border-radius: ${tombac.unit(8)};
+  border-radius: 0 ${tombac.unit(8)} ${tombac.unit(8)} 0;
   font-size: ${tombac.unit(14)};
   font-weight: bold;
-  box-shadow: 0 ${tombac.unit(4)} ${tombac.unit(12)} rgba(0, 0, 0, 0.15);
+  border: none;
   transition: all 0.2s ease;
   min-width: ${tombac.unit(200)};
 
   &:hover:not(:disabled) {
-    transform: translateY(-${tombac.unit(2)});
-    box-shadow: 0 ${tombac.unit(6)} ${tombac.unit(16)} rgba(0, 0, 0, 0.2);
+    background-color: ${tombac.color("primary", 800)};
   }
 
   &:disabled {
