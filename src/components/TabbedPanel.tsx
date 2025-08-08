@@ -29,7 +29,7 @@ function TabbedPanel({ onToggleVisibility }: TabbedPanelProps) {
   };
 
   const tabs = [
-    { id: "search", label: "Wyszukiwanie" },
+    { id: "search", label: "Search" },
     { id: "responses", label: "Responses" },
     { id: "layers", label: "Layers" },
   ];

@@ -29,7 +29,7 @@ function ResponsesTab() {
     ))
   ) : (
     <>
-      <p>Brak odpowiedzi</p>
+      <p>No responses</p>
     </>
   );
 }

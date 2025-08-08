@@ -34,10 +34,10 @@ function SearchForm({
   return (
     <FormContainer onSubmit={handleSubmit}>
       <FieldContainer>
-        <StyledLabel>Fraza do wyszukania:</StyledLabel>
+        <StyledLabel>Searched phrase:</StyledLabel>
         <StyledInput
           type="text"
-          placeholder="Wpisz frazę do wyszukania (np. 'restauracja')"
+          placeholder="Enter search phrase (e.g. 'restaurant')"
           value={text}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setText(e.target.value)
@@ -47,10 +47,10 @@ function SearchForm({
 
       <FieldRow>
         <FieldContainer>
-          <StyledLabel>Budżet:</StyledLabel>
+          <StyledLabel>Budget:</StyledLabel>
           <StyledInput
             type="number"
-            placeholder="Budżet"
+            placeholder="Budget"
             value={budget || ""}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setBudget(Number(e.target.value))
@@ -61,7 +61,7 @@ function SearchForm({
         </FieldContainer>
 
         <FieldContainer>
-          <StyledLabel>Typ budżetu:</StyledLabel>
+          <StyledLabel>Budget type:</StyledLabel>
           <Select
             value={budgetType}
             options={budgetOptions}
@@ -78,7 +78,7 @@ function SearchForm({
       </FieldRow>
 
       <FieldContainer>
-        <StyledLabel>Tryb podróży:</StyledLabel>
+        <StyledLabel>Travel mode:</StyledLabel>
         <Select
           value={travelMode}
           options={travelModeOptions}
@@ -98,7 +98,7 @@ function SearchForm({
         variant="primary"
         disabled={!text.trim() || budget <= 0}
       >
-        Dodaj frazę
+        Add phrase
       </StyledButton>
     </FormContainer>
   );

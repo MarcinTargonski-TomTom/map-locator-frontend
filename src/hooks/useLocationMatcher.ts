@@ -49,7 +49,7 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
 
       if (!token) return null;
 
-      // Jeśli token zaczyna się i kończy cudzysłowami, to jest JSON string
+      // If token starts and ends with quotes, it's a JSON string
       if (token.startsWith('"') && token.endsWith('"')) {
         try {
           return JSON.parse(token);
@@ -57,7 +57,7 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
           return token;
         }
       }
-      // W przeciwnym razie zwróć jak jest
+      // Otherwise return as is
       return token;
     } catch {
       return null;
@@ -74,7 +74,7 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
     try {
       const token = getAuthToken();
       if (!token) {
-        throw new Error("Brak tokenu uwierzytelnienia. Zaloguj się ponownie.");
+        throw new Error("Missing authentication token. Please log in again.");
       }
 
       const requestData: LocationMatchRequest[] = pointsOfInterest.map(
@@ -97,7 +97,7 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
         }
       );
 
-      console.log("Wysyłanie danych do API:", requestData);
+      console.log("Sending data to API:", requestData);
 
       const response = await fetch(
         "http://localhost:8080/locations/v1/matchLocation",
@@ -117,22 +117,26 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
       if (!response.ok) {
         if (response.status === 401) {
           throw new Error(
-            "Nieautoryzowany dostęp. Sprawdź token uwierzytelnienia."
+            "Unauthorized access. Please check your authentication token."
           );
         }
         if (response.status === 403) {
-          throw new Error("Brak uprawnień do wykonania tej operacji.");
+          throw new Error(
+            "Insufficient permissions to perform this operation."
+          );
         }
-        throw new Error(`Błąd HTTP: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `HTTP Error: ${response.status} ${response.statusText}`
+        );
       }
 
       const result = await response.json();
       return result as ApiResponse[];
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Wystąpił nieznany błąd";
+        err instanceof Error ? err.message : "An unknown error occurred";
       setError(errorMessage);
-      console.error("Błąd podczas wysyłania danych:", err);
+      console.error("Error while sending data:", err);
     } finally {
       setIsLoading(false);
     }

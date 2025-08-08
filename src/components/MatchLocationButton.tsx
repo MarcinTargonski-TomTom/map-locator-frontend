@@ -16,19 +16,16 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
   const { addToast } = useToasts();
 
   const smoothingOptions = [
-    { value: "CONVEX_HULL", label: "Wypukła otoczka" },
-    { value: "NONE", label: "Brak wygładzania" },
-    { value: "ENVELOPE", label: "Prostokątna koperta" },
+    { value: "CONVEX_HULL", label: "Round" },
+    { value: "NONE", label: "No smoothing" },
+    { value: "ENVELOPE", label: "Rectangular" },
   ];
 
   const [smoothingMethod, setSmoothingMethod] = useState(smoothingOptions[0]);
 
   const handleMatch = async () => {
     if (pointsOfInterest.length === 0) {
-      addToast(
-        "Dodaj przynajmniej jeden punkt lub frazę wyszukiwania",
-        "alert"
-      );
+      addToast("Add at least one point or search phrase", "alert");
       return;
     }
 
@@ -38,10 +35,10 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
         smoothingMethod.value as "NONE" | "CONVEX_HULL" | "ENVELOPE"
       );
       if (!newData || newData.length == 0) {
-        addToast("Brak danych do wyświetlenia", "danger");
+        addToast("No data to display", "danger");
         return;
       } else {
-        addToast("Dopasowanie lokalizacji zakończone pomyślnie!", "success");
+        addToast("Location matching completed successfully!", "success");
 
         const processedData = processApiResponses(newData);
         setRegions(
@@ -60,8 +57,8 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
         setResponseIndex(0);
       }
     } catch (err) {
-      // Error już jest obsłużony w hooku
-      console.error("Błąd podczas dopasowywania lokalizacji:", err);
+      // Error is already handled in the hook
+      console.error("Error during location matching:", err);
     }
   };
 
@@ -79,7 +76,7 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
             }
           }}
           options={smoothingOptions}
-          placeholder="Metoda"
+          placeholder="Method"
           menuPlacement="top"
           isSearchable={false}
         />
@@ -90,11 +87,11 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
           disabled={disabled || isLoading || pointsOfInterest.length === 0}
           $loading={isLoading}
         >
-          {isLoading ? "Dopasowywanie..." : "Dopasuj lokalizacje"}
+          {isLoading ? "Matching..." : "Match locations"}
         </StyledButton>
       </ButtonWithSelect>
 
-      {error && <ErrorMessage>Błąd: {error}</ErrorMessage>}
+      {error && <ErrorMessage>Error: {error}</ErrorMessage>}
     </ButtonContainer>
   );
 }

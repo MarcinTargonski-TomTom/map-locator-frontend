@@ -30,8 +30,8 @@ export interface ApiResponse {
 
 export type TravelMode = "CAR" | "PEDESTRIAN" | "BUS";
 export const TRAVEL_MODE_OPTIONS = [
-  { value: "CAR" as TravelMode, label: "Samochód" },
-  { value: "BUS" as TravelMode, label: "Autobus" },
+  { value: "CAR" as TravelMode, label: "Car" },
+  { value: "BUS" as TravelMode, label: "Bus" },
 ];
 
 export type BudgetType =
@@ -41,8 +41,8 @@ export type BudgetType =
   | "fuelBudgetInLiters";
 
 export const BUDGET_OPTIONS = [
-  { value: "distanceBudgetInMeters" as BudgetType, label: "Dystans (metry)" },
-  { value: "timeBudgetInSec" as BudgetType, label: "Czas (sekundy)" },
-  { value: "energyBudgetInkWh" as BudgetType, label: "Energia (kWh)" },
-  { value: "fuelBudgetInLiters" as BudgetType, label: "Paliwo (litry)" },
+  { value: "distanceBudgetInMeters" as BudgetType, label: "Distance (meters)" },
+  { value: "timeBudgetInSec" as BudgetType, label: "Time (seconds)" },
+  { value: "energyBudgetInkWh" as BudgetType, label: "Energy (kWh)" },
+  { value: "fuelBudgetInLiters" as BudgetType, label: "Fuel (liters)" },
 ];

@@ -47,7 +47,7 @@ function MapClickHandler({
       el.style.cursor = "pointer";
       el.title = `${
         poi.name
-      } - Kliknij aby zobaczyć szczegóły (${poi.center.longitude.toFixed(
+      } - Click to see details (${poi.center.longitude.toFixed(
         4
       )}, ${poi.center.latitude.toFixed(4)})`;
 
