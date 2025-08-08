@@ -2,8 +2,9 @@ import styled from "styled-components";
 import { Box, Heading } from "tombac";
 import Tabs from "./Tabs";
 import { useContext, useState } from "react";
-import type { ApiResponse } from "../types/api";
+import type { ApiResponse, PointOfInterestDTO } from "../types/api";
 import { MapContext } from "../context/mapContext";
+import { ensureColorsAssigned } from "../utils/colorUtils";
 
 type TabType = "Location matches";
 
@@ -25,19 +26,24 @@ function LocationMatchesList({
   const handleLocationSelect = (selectedMatch: ApiResponse) => {
     console.log("Selected location:", selectedMatch);
 
-    // Process the single selected match to display on map
+    const coloredPoints: PointOfInterestDTO[] = ensureColorsAssigned(
+      selectedMatch.requestRegions.map((region) => region.pointOfInterest)
+    );
+
     const processedLocationMatch: ApiResponse = {
       name: selectedMatch.name,
       responseRegion: selectedMatch.responseRegion,
       requestRegions:
-        selectedMatch.requestRegions?.map((reqRegion, index) => ({
-          ...reqRegion,
-          pointOfInterest: {
-            ...reqRegion.pointOfInterest,
-            isDisplayed: true,
-            order: index,
-          },
-        })) || [],
+        selectedMatch.requestRegions?.map((reqRegion, index) => {
+          return {
+            ...reqRegion,
+            pointOfInterest: {
+              ...coloredPoints[index], // Use coloredPoints instead of pointsWithColors
+              isDisplayed: true,
+              order: index,
+            },
+          };
+        }) || [],
     };
 
     setRegions([processedLocationMatch]);
@@ -67,14 +73,14 @@ function LocationMatchesList({
         {
           <ScrollableList>
             {matches.map((match, index) => (
-              <Heading
+              <LocationItem
                 key={index}
                 level={5}
                 $margin="1sp"
                 onClick={() => handleLocationSelect(match)}
               >
                 {match.name}
-              </Heading>
+              </LocationItem>
             ))}
           </ScrollableList>
         }
@@ -96,14 +102,14 @@ const Panel = styled.div`
   width: 400px;
   height: 40vh;
   font-size: 14px;
-  overflow: hidden;+-
+  overflow: hidden;
 `;
 
 const ScrollableList = styled.div`
   flex: 1;
-  flex: 1;
   overflow-y: auto;
   padding: 8px;
+  height: 100vh;
 
   /* Custom scrollbar */
   &::-webkit-scrollbar {
@@ -122,5 +128,15 @@ const ScrollableList = styled.div`
 
   &::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
+  }
+`;
+
+const LocationItem = styled(Heading)`
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f5f5f5;
   }
 `;
