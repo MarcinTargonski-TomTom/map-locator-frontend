@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import { useToken } from "../hooks/useToken";
 import { SIGN_IN_PATH } from "../const/routes";
 import { useToasts } from "tombac";
-import { set } from "zod";
 
 type SessionContextProps = {
   role: Role | null;
@@ -119,4 +118,5 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useSessionContext = () => useContext(SessionContext);

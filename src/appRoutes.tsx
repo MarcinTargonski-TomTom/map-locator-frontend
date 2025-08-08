@@ -41,8 +41,10 @@ export default function ProtectedElement({
   shouldRender,
   redirect,
 }: ProtectedRouteProps) {
-  shouldRender
-    ? console.log("Rendering component")
-    : console.log("Redirecting to", redirect);
+  if (shouldRender) {
+    console.log("Rendering component");
+  } else {
+    console.log("Redirecting to", redirect);
+  }
   return shouldRender ? Component : <Navigate replace to={redirect} />;
 }
