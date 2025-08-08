@@ -43,7 +43,6 @@ function SearchTab() {
 
   return (
     <>
-      {/* Info Panel Content */}
       <Section>
         <div>
           <strong>Punkty zainteresowania: {pointsOfInterest.length}</strong>

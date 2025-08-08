@@ -26,7 +26,7 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
 
     try {
       const newData = await matchLocations(pointsOfInterest);
-      if (!newData) {
+      if (!newData || newData.length == 0) {
         addToast("Brak danych do wyświetlenia", "danger");
         return;
       } else {
