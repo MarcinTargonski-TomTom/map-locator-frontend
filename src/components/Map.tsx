@@ -15,6 +15,7 @@ import MapClickHandler from "./MapClickHandler";
 import MatchLocationButton from "./MatchLocationButton";
 import { type PointOfInterestDTO } from "../types/api";
 import RegionDisplay from "./RegionDisplay";
+import SelectResponseForm from "./SelectResponseForm.tsx";
 
 function Map() {
   const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
