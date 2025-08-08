@@ -45,6 +45,7 @@ function Map() {
     const fetchAccountLocationMatches = async () => {
       try {
         const data = await getAccountsLocationMatches();
+        if (!data) throw new Error("No account location matches found");
 
         console.log("Account location matches fetched:", data);
         setAccountLocationMatches(data);

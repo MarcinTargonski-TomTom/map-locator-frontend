@@ -1,9 +1,9 @@
-import type { Tokens } from "../types/signIn";
+import type { ApiResponse } from "../types/api";
 import { TokenType } from "../types/token";
 import { useToken } from "./useToken";
 
 export type GetAccountsLocationMatchesResponse = {
-  getAccountsLocationMatches: () => Promise<any>;
+  getAccountsLocationMatches: () => Promise<ApiResponse[] | undefined>;
 };
 
 const API_ROOT = import.meta.env.VITE_API_ROOT;
@@ -39,7 +39,7 @@ export function useGetAccountsLocationMatches(): GetAccountsLocationMatchesRespo
         );
       }
 
-      const data: Tokens = await response.json();
+      const data: ApiResponse[] = await response.json();
       return data;
     } catch (err: Error | unknown) {
       console.error("Get account location matches error:", err);
