@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   GlMap,
   MapMenuToggle,
@@ -13,13 +13,21 @@ import PointDetailsModal from "./MapPointDetailsModal";
 import AddPointFormModal from "./AddPointFormModal";
 import MapClickHandler from "./MapClickHandler";
 import MatchLocationButton from "./MatchLocationButton";
-import { type PointOfInterestDTO } from "../types/api";
+import { type ApiResponse, type PointOfInterestDTO } from "../types/api";
 import RegionDisplay from "./RegionDisplay";
+import { useGetAccountsLocationMatches } from "../hooks/useGetAccountsLocationMatches";
+import LocationMatchesList from "./LocationMatchesList";
 
 function Map() {
   const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
 
   const [showTabbedPanel, setShowTabbedPanel] = useState(true);
+  const [showUsersLocationMatches, setShowUsersLocationMatches] =
+    useState(false);
+  const [accountLocationMatches, setAccountLocationMatches] = useState<
+    ApiResponse[]
+  >([]);
+  const { getAccountsLocationMatches } = useGetAccountsLocationMatches();
 
   const [showPointForm, setShowPointForm] = useState<{
     isVisible: boolean;
@@ -32,6 +40,52 @@ function Map() {
     poi: PointOfInterestDTO;
     index: number;
   } | null>(null);
+
+  useEffect(() => {
+    const fetchAccountLocationMatches = async () => {
+      try {
+        const data = await getAccountsLocationMatches();
+
+        console.log("Account location matches fetched:", data);
+        setAccountLocationMatches(data);
+      } catch (err) {
+        console.error("Error fetching account location matches:", err);
+      }
+    };
+
+    fetchAccountLocationMatches();
+    console.log(accountLocationMatches);
+  }, []);
+
+  const sideButtonStyle: React.CSSProperties = {
+    position: "absolute",
+    background: "white",
+    border: "1px solid #e0e0e0",
+    borderRadius: "4px",
+    width: "32px",
+    height: "32px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "14px",
+    color: "#666",
+    zIndex: 1001,
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    transition: "all 0.2s ease",
+  } as const;
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.background = "#f0f0f0";
+    e.currentTarget.style.color = "#007acc";
+    e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.15)";
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.background = "white";
+    e.currentTarget.style.color = "#666";
+    e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
+  };
 
   const addMapPoint = (longitude: number, latitude: number, tempId: string) => {
     setShowPointForm({
@@ -68,40 +122,35 @@ function Map() {
         {!showTabbedPanel && (
           <button
             onClick={() => setShowTabbedPanel(true)}
-            style={{
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              background: "white",
-              border: "1px solid #e0e0e0",
-              borderRadius: "4px",
-              width: "32px",
-              height: "32px",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "14px",
-              color: "#666",
-              zIndex: 1001,
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#f0f0f0";
-              e.currentTarget.style.color = "#007acc";
-              e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.15)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "white";
-              e.currentTarget.style.color = "#666";
-              e.currentTarget.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
-            }}
+            style={{ ...sideButtonStyle, top: "20px", left: "20px" }}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
             title="Show panel"
           >
             ▶
           </button>
         )}
+
+        {!showUsersLocationMatches && !showTabbedPanel && (
+          <button
+            onClick={() => setShowUsersLocationMatches(true)}
+            style={{ ...sideButtonStyle, top: "60px", left: "20px" }}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            title="Show user's location matches"
+          >
+            ▶
+          </button>
+        )}
+
+        {showUsersLocationMatches &&
+          accountLocationMatches &&
+          !showTabbedPanel && (
+            <LocationMatchesList
+              matches={accountLocationMatches}
+              onToggleVisibility={() => setShowUsersLocationMatches(false)}
+            />
+          )}
 
         <GlMap
           mapStyleSettings={mapStyleSettings}
