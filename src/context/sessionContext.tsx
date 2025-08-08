@@ -89,7 +89,6 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   }, []);
 
   const handleExtendSession = useCallback(async () => {
-    console.log("Sending request to extend session...");
     setShowExtendSessionModal(false);
 
     const refreshToken = getStoredToken(TokenType.REFRESH);
