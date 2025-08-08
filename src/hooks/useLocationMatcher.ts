@@ -19,7 +19,8 @@ interface UseLocationMatcherResult {
   isLoading: boolean;
   error: string | null;
   matchLocations: (
-    pointsOfInterest: PointOfInterestDTO[]
+    pointsOfInterest: PointOfInterestDTO[],
+    matchingSmootherType: "NONE" | "CONVEX_HULL" | "ENVELOPE"
   ) => Promise<ApiResponse[] | void>;
 }
 
@@ -64,7 +65,8 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
   };
 
   const matchLocations = async (
-    pointsOfInterest: PointOfInterestDTO[]
+    pointsOfInterest: PointOfInterestDTO[],
+    matchingSmootherType: "NONE" | "CONVEX_HULL" | "ENVELOPE"
   ): Promise<ApiResponse[] | void> => {
     setIsLoading(true);
     setError(null);
@@ -105,7 +107,10 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(requestData),
+          body: JSON.stringify({
+            pois: requestData,
+            matchingSmootherType: matchingSmootherType,
+          }),
         }
       );
 

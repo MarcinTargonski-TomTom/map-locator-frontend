@@ -14,7 +14,6 @@ import AddPointFormModal from "./AddPointFormModal";
 import MapClickHandler from "./MapClickHandler";
 import MatchLocationButton from "./MatchLocationButton";
 import { type PointOfInterestDTO } from "../types/api";
-import SelectResponseForm from "./SelectResponseForm";
 import RegionDisplay from "./RegionDisplay";
 
 function Map() {
@@ -151,8 +150,6 @@ function Map() {
 
           <RegionDisplay />
         </GlMap>
-
-        <SelectResponseForm />
 
         <MatchLocationButton />
 
