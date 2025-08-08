@@ -146,8 +146,6 @@ function LayersTab() {
                   )
                 }
                 style={{
-                  // padding: "4px 12px",
-                  // borderRadius: "4px",
                   cursor: "pointer",
                   border: "none",
                   backgroundColor: "transparent",

@@ -15,6 +15,7 @@ import MapClickHandler from "./MapClickHandler";
 import MatchLocationButton from "./MatchLocationButton";
 import { type PointOfInterestDTO } from "../types/api";
 import RegionDisplay from "./RegionDisplay";
+import SelectResponseForm from "./SelectResponseForm.tsx";
 
 function Map() {
   const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
@@ -110,7 +111,6 @@ function Map() {
           }
           mapModel={mapModel}
           apiKey={apiKey}
-          //centered at lodz
           createMapOptions={{
             center: [19.51898192980059, 51.7373403170032],
             zoom: 10,
@@ -150,6 +150,8 @@ function Map() {
 
           <RegionDisplay />
         </GlMap>
+
+        <SelectResponseForm />
 
         <MatchLocationButton />
 

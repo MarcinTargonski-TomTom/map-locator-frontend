@@ -90,6 +90,8 @@ function SearchForm({
             }
           }}
           $width="100%"
+          menuPlacement="auto"
+          menuPortalTarget={document.body}
         />
       </FieldContainer>
 
