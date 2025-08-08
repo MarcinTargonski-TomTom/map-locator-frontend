@@ -120,7 +120,6 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
   }, [addToast]);
 
   const handleCloseModal = useCallback(() => {
-    console.log("Modal closed without extending session");
     addToast("Your session will not be extended", "alert");
     setShowExtendSessionModal(false);
   }, []);
