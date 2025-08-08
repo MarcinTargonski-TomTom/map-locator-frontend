@@ -10,11 +10,9 @@ export function useToken(initialValue: Tokens | null = null) {
         const item = window.localStorage.getItem(tokenKey);
         if (!item) return initialValue?.auth || null;
 
-        // Jeśli wartość zaczyna się i kończy cudzysłowami, to jest JSON string
         if (item.startsWith('"') && item.endsWith('"')) {
           return JSON.parse(item);
         }
-        // W przeciwnym razie zwróć surową wartość
         return item;
       } catch {
         return initialValue?.auth || null;
@@ -28,7 +26,6 @@ export function useToken(initialValue: Tokens | null = null) {
       if (value === null) {
         window.localStorage.removeItem(tokenKey);
       } else {
-        // Zapisuj token bezpośrednio bez JSON.stringify
         window.localStorage.setItem(tokenKey, value);
       }
     } catch (error) {

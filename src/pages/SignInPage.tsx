@@ -11,10 +11,10 @@ import { MAP_PATH } from "../const/routes";
 import { useSessionContext } from "../context/sessionContext";
 
 const SignInPage = () => {
-  const { signIn } = useSignIn();
+  const { signIn: sendSignInRequest } = useSignIn();
   const { addToast } = useToasts();
   const navigate = useNavigate();
-  const { signIn: setRoleFromToken } = useSessionContext();
+  const { signIn } = useSessionContext();
 
   const [credentials, setCredentials] = useState<Credentials>({
     login: "",
@@ -32,9 +32,9 @@ const SignInPage = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const tokens: Tokens = await signIn(credentials);
+      const tokens: Tokens = await sendSignInRequest(credentials);
       addToast("Sign in successful!", "success");
-      setRoleFromToken(tokens.auth);
+      signIn(tokens);
       navigate(MAP_PATH);
     } catch (err: Error | unknown) {
       addToast((err as Error).message || "Sign in failed", "danger");

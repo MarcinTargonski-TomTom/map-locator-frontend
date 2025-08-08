@@ -5,28 +5,42 @@ import MapPage from "./pages/MapPage.tsx";
 import PageNotFound from "./pages/PageNotFound.tsx";
 import { Navigate, Route, Routes } from "react-router";
 import { useSessionContext } from "./context/sessionContext.tsx";
+import ExtendSessionModal from "./components/ExtendSessionModal.tsx";
 
 export const AppRoutes = () => {
-  const { role } = useSessionContext();
+  const {
+    role,
+    showExtendSessionModal,
+    handleExtendSession,
+    handleCloseModal,
+  } = useSessionContext();
   console.log("Current role:", role);
 
   return (
-    <Routes>
-      <Route path="/" element={<Navigate replace to={MAP_PATH} />} />
-      <Route
-        path={MAP_PATH}
-        element={
-          <ProtectedElement
-            element={<MapPage />}
-            shouldRender={role !== null}
-            redirect={SIGN_IN_PATH}
-          />
-        }
-      />
-      <Route path={SIGN_IN_PATH} element={<SignInPage />} />
-      <Route path={SIGN_UP_PATH} element={<SignUpPage />} />
-      <Route path="/*" element={<PageNotFound />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Navigate replace to={MAP_PATH} />} />
+        <Route
+          path={MAP_PATH}
+          element={
+            <ProtectedElement
+              element={<MapPage />}
+              shouldRender={role !== null}
+              redirect={SIGN_IN_PATH}
+            />
+          }
+        />
+        <Route path={SIGN_IN_PATH} element={<SignInPage />} />
+        <Route path={SIGN_UP_PATH} element={<SignUpPage />} />
+        <Route path="/*" element={<PageNotFound />} />
+      </Routes>
+      {showExtendSessionModal && (
+        <ExtendSessionModal
+          onSuccess={handleExtendSession}
+          onClose={handleCloseModal}
+        />
+      )}
+    </>
   );
 };
 
