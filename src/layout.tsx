@@ -1,23 +1,17 @@
-import { Route, Routes } from "react-router";
 import { AppNavbar } from "./components/Navbar.tsx";
-import MapPage from "./pages/MapPage.tsx";
-import PageNotFound from "./pages/PageNotFound.tsx";
 import { ToastsProvider, TombacApp } from "tombac";
-import SignInPage from "./pages/SignInPage.tsx";
-import SignUpPage from "./pages/SignUpPage.tsx";
+import { SessionProvider } from "./context/sessionContext.tsx";
+import { AppRoutes } from "./appRoutes.tsx";
 
 const Layout = () => {
   return (
     <div className="min-h-screen flex flex-col relative">
       <TombacApp>
         <ToastsProvider zIndex={10}>
-          <AppNavbar />
-          <Routes>
-            <Route path="/map" element={<MapPage />} />
-            <Route path="/sign-in" element={<SignInPage />} />
-            <Route path="/sign-up" element={<SignUpPage />} />
-            <Route path="/*" element={<PageNotFound />} />
-          </Routes>
+          <SessionProvider>
+            <AppNavbar />
+            <AppRoutes />
+          </SessionProvider>
         </ToastsProvider>
       </TombacApp>
     </div>
