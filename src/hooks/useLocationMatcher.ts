@@ -49,7 +49,6 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
 
       if (!token) return null;
 
-      // Jeśli token zaczyna się i kończy cudzysłowami, to jest JSON string
       if (token.startsWith('"') && token.endsWith('"')) {
         try {
           return JSON.parse(token);
@@ -57,7 +56,6 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
           return token;
         }
       }
-      // W przeciwnym razie zwróć jak jest
       return token;
     } catch {
       return null;
@@ -96,8 +94,6 @@ export const useLocationMatcher = (): UseLocationMatcherResult => {
           return baseRequest;
         }
       );
-
-      console.log("Wysyłanie danych do API:", requestData);
 
       const response = await fetch(
         "http://localhost:8080/locations/v1/matchLocation",

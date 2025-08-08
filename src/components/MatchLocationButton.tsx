@@ -60,7 +60,6 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
         setResponseIndex(0);
       }
     } catch (err) {
-      // Error już jest obsłużony w hooku
       console.error("Błąd podczas dopasowywania lokalizacji:", err);
     }
   };
