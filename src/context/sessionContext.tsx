@@ -134,7 +134,6 @@ export const SessionProvider = ({ children }: SessionProviderProps) => {
       const timeUntilExpiration =
         (decodedAuthtoken.exp - currentTime) * 1000 * 0.7;
       extendSessionTimerRef.current = setTimeout(() => {
-        console.log("Showing extend session modal");
         setShowExtendSessionModal(true);
       }, timeUntilExpiration);
     },
