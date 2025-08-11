@@ -65,18 +65,18 @@ function AddPointFormModal({
   return (
     <Modal isOpen={true}>
       <ModalHeader>
-        <Heading level={3}>Dodaj punkt na mapie</Heading>
+        <Heading level={3}>Add point on map</Heading>
       </ModalHeader>
       <ModalLayout $margin="2sp">
         <div style={{ fontSize: "12px", color: "#666", marginBottom: "15px" }}>
-          Współrzędne: {longitude.toFixed(4)}, {latitude.toFixed(4)}
+          Coordinates: {longitude.toFixed(4)}, {latitude.toFixed(4)}
         </div>
         <form onSubmit={handleSubmit}>
           <FieldContainer>
-            <StyledLabel>Nazwa punktu:</StyledLabel>
+            <StyledLabel>Point name:</StyledLabel>
             <StyledInput
               type="text"
-              placeholder="Wprowadź nazwę punktu"
+              placeholder="Enter point name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               $marginBottom="12u"
@@ -84,10 +84,10 @@ function AddPointFormModal({
           </FieldContainer>
 
           <FieldContainer>
-            <StyledLabel>Wartość:</StyledLabel>
+            <StyledLabel>Value:</StyledLabel>
             <StyledInput
               type="number"
-              placeholder="Wprowadź wartość"
+              placeholder="Enter value"
               value={value || ""}
               onChange={(e) => setValue(Number(e.target.value))}
               min="0"
@@ -96,7 +96,7 @@ function AddPointFormModal({
           </FieldContainer>
 
           <FieldContainer>
-            <StyledLabel>Typ budżetu:</StyledLabel>
+            <StyledLabel>Budget type:</StyledLabel>
             <Select
               value={budgetType}
               options={BUDGET_OPTIONS}
@@ -112,7 +112,7 @@ function AddPointFormModal({
           </FieldContainer>
 
           <FieldContainer>
-            <StyledLabel>Tryb podróży:</StyledLabel>
+            <StyledLabel>Travel mode:</StyledLabel>
             <Select
               value={travelMode}
               options={TRAVEL_MODE_OPTIONS}
@@ -129,13 +129,13 @@ function AddPointFormModal({
 
           <div style={{ display: "flex", gap: "10px" }}>
             <StyledButton variant="secondary" onClick={onClose}>
-              Anuluj
+              Cancel
             </StyledButton>
             <StyledButton
               variant="primary"
               disabled={!name.trim() || value <= 0}
             >
-              Dodaj punkt
+              Add point
             </StyledButton>
           </div>
         </form>

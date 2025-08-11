@@ -45,27 +45,27 @@ function SearchTab() {
     <>
       <Section>
         <div>
-          <strong>Punkty zainteresowania: {pointsOfInterest.length}</strong>
+          <strong>Points of interest: {pointsOfInterest.length}</strong>
         </div>
         <div style={{ fontSize: "11px", color: "#666", marginTop: "4px" }}>
-          Punkty na mapie: {mapPoints.length} | Frazy: {searchPhrases.length}
+          Points on map: {mapPoints.length} | Phrases: {searchPhrases.length}
         </div>
         {pointsOfInterest.length > 0 && (
           <Button variant="primary" $margin="1sp" onClick={clearAllPoints}>
-            Wyczyść wszystko
+            Clear all
           </Button>
         )}
         <div style={{ fontSize: "12px", marginTop: "8px", color: "#666" }}>
-          <p>Kliknij na mapę aby dodać punkt</p>
-          <p>Kliknij na punkt aby go usunąć</p>
+          <p>Click on map to add point</p>
+          <p>Click on point to remove it</p>
           <span style={{ fontSize: "11px", fontStyle: "italic" }}>
-            Każdy punkt ma automatycznie przypisany unikalny kolor
+            Each point is automatically assigned a unique color
           </span>
         </div>
 
         {mapPoints.length > 0 && (
           <div style={{ marginTop: "12px", fontSize: "11px" }}>
-            <strong>Kolory punktów na mapie:</strong>
+            <strong>Point colors on map:</strong>
             <div
               style={{
                 display: "flex",
@@ -106,7 +106,7 @@ function SearchTab() {
 
       <Section>
         <div>
-          <strong>Wyszukiwanie miejsca</strong>
+          <strong>Search places</strong>
         </div>
         <SearchForm
           onAddPhrase={addSearchPhrase}
@@ -123,7 +123,7 @@ function SearchTab() {
                 marginBottom: "8px",
               }}
             >
-              Frazy do wyszukania ({searchPhrases.length}):
+              <strong>Search phrases ({searchPhrases.length}):</strong>
             </div>
             {searchPhrases.map((poi, index) => (
               <div
@@ -169,7 +169,7 @@ function SearchTab() {
               </div>
             ))}
             <StyledButton onClick={removePhrases} variant="secondary">
-              Wyczyść wszystkie frazy
+              Clear all phrases
             </StyledButton>
           </div>
         )}

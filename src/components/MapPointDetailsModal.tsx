@@ -34,28 +34,30 @@ function PointDetailsModal({
     <Modal isOpen={true}>
       <ModalLayout $margin="1sp">
         <Heading level={3} $margin="1sp">
-          Szczegóły punktu
+          Point Details
         </Heading>
 
-        <StyledLabel>Nazwa:</StyledLabel>
+        <StyledLabel>Name:</StyledLabel>
         <ContentDiv>
           <strong>{poi.name}</strong>
         </ContentDiv>
 
-        <StyledLabel>Współrzędne:</StyledLabel>
+        <StyledLabel>Coordinates:</StyledLabel>
         {poi.center && (
           <ContentDiv>
             {poi.center.longitude.toFixed(4)}, {poi.center.latitude.toFixed(4)}
           </ContentDiv>
         )}
 
-        <StyledLabel>Wartość:</StyledLabel>
-        <ContentDiv>{poi.value}</ContentDiv>
+        <StyledLabel>Value:</StyledLabel>
+        <ContentDiv>
+          <strong>{poi.value}</strong>
+        </ContentDiv>
 
-        <StyledLabel>Typ budżetu:</StyledLabel>
+        <StyledLabel>Budget type:</StyledLabel>
         <ContentDiv>{budgetLabel}</ContentDiv>
 
-        <StyledLabel>Tryb podróży:</StyledLabel>
+        <StyledLabel>Travel mode:</StyledLabel>
         <ContentDiv>{travelLabel}</ContentDiv>
 
         <div style={{ display: "flex", gap: "10px" }}>
@@ -66,7 +68,7 @@ function PointDetailsModal({
             $flex="1"
             onClick={onClose}
           >
-            Zamknij
+            Close
           </Button>
           <Button
             variant="primary"
@@ -75,7 +77,7 @@ function PointDetailsModal({
             $flex="1"
             onClick={deletePoint}
           >
-            Usuń punkt
+            Remove point
           </Button>
         </div>
       </ModalLayout>

@@ -101,7 +101,7 @@ function SearchPanel() {
             </div>
           ))}
           <StyledButton onClick={removePhrases} variant="secondary">
-            Wyczyść wszystkie frazy
+            Clear all phrases
           </StyledButton>
         </div>
       )}

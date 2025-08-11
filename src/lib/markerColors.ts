@@ -1,11 +1,11 @@
 export const MARKER_COLORS = [
-  "#00AA00", // zielony
-  "#0066FF", // niebieski
-  "#FF6600", // pomarańczowy
-  "#9900CC", // fioletowy
-  "#FFD700", // złoty
-  "#FF1493", // różowy
-  "#00CED1", // turkusowy
-  "#8B4513", // brązowy
+  "#00AA00", // green
+  "#0066FF", // blue
+  "#FF6600", // orange
+  "#9900CC", // purple
+  "#FFD700", // gold
+  "#FF1493", // pink
+  "#00CED1", // turquoise
+  "#8B4513", // brown
   "#32CD32", // lime
 ];
