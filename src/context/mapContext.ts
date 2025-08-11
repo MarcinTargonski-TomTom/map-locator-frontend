@@ -1,5 +1,10 @@
 import { createContext } from "react";
-import type { ApiResponse, PointOfInterestDTO } from "../types/api";
+import type {
+  ApiResponse,
+  PointOfInterestDTO,
+  PolygonPoint,
+  MortonTileData,
+} from "../types/api";
 
 export type MapContextType = {
   pointsOfInterest: PointOfInterestDTO[];
@@ -10,6 +15,15 @@ export type MapContextType = {
   setResponseIndex: (index: number) => void;
   reset: () => void;
   removePhrases: () => void;
+  polygonPoints: PolygonPoint[];
+  setPolygonPoints: (points: PolygonPoint[]) => void;
+  selectedLayer: number | null;
+  setSelectedLayer: (layer: number | null) => void;
+  mortonTiles: MortonTileData[];
+  setMortonTiles: (tiles: MortonTileData[]) => void;
+  isPolygonMode: boolean;
+  setIsPolygonMode: (mode: boolean) => void;
+  resetPolygon: () => void;
 };
 
 export const MapContext = createContext<MapContextType>({
@@ -21,4 +35,13 @@ export const MapContext = createContext<MapContextType>({
   setResponseIndex: () => {},
   reset: () => {},
   removePhrases: () => {},
+  polygonPoints: [],
+  setPolygonPoints: () => {},
+  selectedLayer: null,
+  setSelectedLayer: () => {},
+  mortonTiles: [],
+  setMortonTiles: () => {},
+  isPolygonMode: false,
+  setIsPolygonMode: () => {},
+  resetPolygon: () => {},
 });

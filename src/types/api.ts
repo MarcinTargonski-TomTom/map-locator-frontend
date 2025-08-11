@@ -46,3 +46,20 @@ export const BUDGET_OPTIONS = [
   { value: "energyBudgetInkWh" as BudgetType, label: "Energy (kWh)" },
   { value: "fuelBudgetInLiters" as BudgetType, label: "Fuel (liters)" },
 ];
+
+export interface PolygonPoint {
+  latitude: number;
+  longitude: number;
+}
+
+export interface PolygonBounds {
+  bounds: PolygonPoint[];
+  layer: number;
+}
+
+export interface MortonTileData {
+  mortonCode: number;
+  occurrences: number;
+}
+
+export type PolygonApiResponse = MortonTileData[];

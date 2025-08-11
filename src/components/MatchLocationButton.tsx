@@ -57,7 +57,6 @@ function MatchLocationButton({ disabled = false }: MatchLocationButtonProps) {
         setResponseIndex(0);
       }
     } catch (err) {
-      // Error is already handled in the hook
       console.error("Error during location matching:", err);
     }
   };
