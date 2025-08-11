@@ -15,10 +15,8 @@ import MapClickHandler from "./MapClickHandler";
 import MatchLocationButton from "./MatchLocationButton";
 import { type ApiResponse, type PointOfInterestDTO } from "../types/api";
 import RegionDisplay from "./RegionDisplay";
-import SelectResponseForm from "./SelectResponseForm.tsx";
 import { useGetAccountsLocationMatches } from "../hooks/useGetAccountsLocationMatches";
 import LocationMatchesList from "./LocationMatchesList";
-
 
 function Map() {
   const apiKey = import.meta.env.VITE_TOMTOM_API_KEY;
@@ -201,8 +199,6 @@ function Map() {
 
           <RegionDisplay />
         </GlMap>
-
-        <SelectResponseForm />
 
         <MatchLocationButton />
 

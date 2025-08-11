@@ -109,7 +109,7 @@ const ScrollableList = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 8px;
-  height: 100vh;
+  max-height: calc(40vh - 100px);
 
   /* Custom scrollbar */
   &::-webkit-scrollbar {
