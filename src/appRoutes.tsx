@@ -1,4 +1,9 @@
-import { MAP_PATH, SIGN_IN_PATH, SIGN_UP_PATH } from "./const/routes.ts";
+import {
+  HEATMAP_PATH,
+  MAP_PATH,
+  SIGN_IN_PATH,
+  SIGN_UP_PATH,
+} from "./const/routes.ts";
 import SignInPage from "./pages/SignInPage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import MapPage from "./pages/MapPage.tsx";
@@ -6,6 +11,7 @@ import PageNotFound from "./pages/PageNotFound.tsx";
 import { Navigate, Route, Routes } from "react-router";
 import { useSessionContext } from "./context/sessionContext.tsx";
 import ExtendSessionModal from "./components/ExtendSessionModal.tsx";
+import HeatmapPage from "./pages/HeatmapPage.tsx";
 
 export const AppRoutes = () => {
   const {
@@ -25,6 +31,16 @@ export const AppRoutes = () => {
           element={
             <ProtectedElement
               element={<MapPage />}
+              shouldRender={role !== null}
+              redirect={SIGN_IN_PATH}
+            />
+          }
+        />
+        <Route
+          path={HEATMAP_PATH}
+          element={
+            <ProtectedElement
+              element={<HeatmapPage />}
               shouldRender={role !== null}
               redirect={SIGN_IN_PATH}
             />

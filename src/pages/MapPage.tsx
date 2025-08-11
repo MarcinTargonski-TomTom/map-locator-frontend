@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import Map from "../components/Map";
-import type { PointOfInterestDTO, ApiResponse } from "../types/api";
+import type {
+  PointOfInterestDTO,
+  ApiResponse,
+  PolygonPoint,
+  MortonTileData,
+} from "../types/api";
 import { MapContext } from "../context/mapContext";
 import { useToasts } from "tombac";
 
@@ -11,13 +16,25 @@ export default function MapPage() {
   const [regions, setRegions] = useState<ApiResponse[] | null>(null);
   const [responseIndex, setResponseIndex] = useState<number>(0);
 
+  const [polygonPoints, setPolygonPoints] = useState<PolygonPoint[]>([]);
+  const [selectedLayer, setSelectedLayer] = useState<number | null>(null);
+  const [mortonTiles, setMortonTiles] = useState<MortonTileData[]>([]);
+  const [isPolygonMode, setIsPolygonMode] = useState<boolean>(false);
+
   useEffect(() => {
     if (!regions) return;
 
     const { requestRegions } = regions[responseIndex];
     setPointsOfInterest(requestRegions.map((region) => region.pointOfInterest));
   }, [responseIndex, regions]);
+
   const { addToast } = useToasts();
+
+  const resetPolygon = () => {
+    setPolygonPoints([]);
+    setMortonTiles([]);
+    addToast("Polygon has been cleared", "info");
+  };
   return (
     <div className="min-h-screen flex flex-col relative">
       <MapContext.Provider
@@ -32,6 +49,7 @@ export default function MapPage() {
             setPointsOfInterest([]);
             setRegions(null);
             setResponseIndex(0);
+            resetPolygon();
             addToast("All points and phrases have been cleared", "info");
           },
           removePhrases: () => {
@@ -40,6 +58,15 @@ export default function MapPage() {
             );
             addToast("All phrases have been cleared", "info");
           },
+          polygonPoints,
+          setPolygonPoints,
+          selectedLayer,
+          setSelectedLayer,
+          mortonTiles,
+          setMortonTiles,
+          isPolygonMode,
+          setIsPolygonMode,
+          resetPolygon,
         }}
       >
         <Map />
